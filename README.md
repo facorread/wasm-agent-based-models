@@ -5,6 +5,7 @@ Reliable and efficient agent-based models in Rust and WebAssembly
 Copyright (C) 2020 Fabio Correa facorread@gmail.com
 
 https://github.com/facorread/wasm-agent-based-models
+
 https://gitlab.com/facorread/wasm-agent-based-models
 
 ## Introduction
