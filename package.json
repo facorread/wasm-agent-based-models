@@ -1,0 +1,41 @@
+{
+  "author": "Fabio A. Correa Duran <facorread@gmail.com>",
+  "name": "wasm-agent-based-models-full",
+  "version": "0.1.0",
+  "description": "Reliable and efficient agent-based models in Rust and WebAssembly (full example website)",
+  "scripts": {
+    "build": "rimraf dist pkg && webpack",
+    "start": "rimraf dist pkg && webpack-dev-server --open",
+    "test": "cargo test && wasm-pack test --headless"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/facorread/wasm-agent-based-models.git"
+  },
+  "keywords": [
+    "agent-based-models",
+    "webassembly",
+    "wasm",
+    "rust",
+    "webpack"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/facorread/wasm-agent-based-models/issues"
+  },
+  "homepage": "https://github.com/facorread/wasm-agent-based-models#readme",
+  "devDependencies": {
+    "@wasm-tool/wasm-pack-plugin": "^1.3.0",
+    "copy-webpack-plugin": "^6.4.0",
+    "css-loader": "^5.0.1",
+    "extract-loader": "^5.1.0",
+    "file-loader": "^6.2.0",
+    "rimraf": "^3.0.0",
+    "sass": "^1.30.0",
+    "sass-loader": "^10.1.0",
+    "webpack": "^5.10.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^4.0.0-beta.0",
+    "webpack-validator": "^3.0.1"
+  }
+}

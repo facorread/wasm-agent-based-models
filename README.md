@@ -10,7 +10,7 @@ https://gitlab.com/facorread/wasm-agent-based-models
 
 ## Introduction
 
-Please check out the README for [rust-agent-based-models first].
+Please check out the README for [rust-agent-based-models] first.
 
 Agent-based models (ABM) are computer programs that define agents, virtual entities that imitate the decision-making processes and interactions of real people, animals, neurons, etc. [wasm-agent-based-models] is an interactive version of [rust-agent-based-models] that runs in a web browser. The researcher can copy code from one project into the other to explore model behavior. While [rust-agent-based-models] explores multiple, independent runs of the model under a wide range of parameter scenarios automatically, wasm-agent-based-models visualizes one run of the model while the researcher freely varies parameters, pauses the model, and explores alternative behavior using interactive controls.
 
@@ -20,7 +20,7 @@ Rust offers a range of tools to develop [graphical user interfaces] (GUIs); in 2
 
 ## Getting started
 
-To get started with wasm-agent-based models, decent knowledge of html, css, and javascript is required. You should also read the [Rust and WebAssembly book], and follow the setup instructions therein. Installing `npm` is optional.
+To get started with wasm-agent-based models, decent knowledge of html, css, and javascript is required. You should also read the [Rust and WebAssembly book], and follow the setup instructions therein. `npm` is strongly recommended.
 
 After you have started with [rust-agent-based-models], [Clone this repository] (`https://github.com/facorread/wasm-agent-based-models.git`) and use your favorite terminal to run `wasm-pack build --target web`. Follow the instructions on screen.
 
@@ -38,18 +38,21 @@ To examine the similarities between the two programs, you can use `[fgrep]`:
 fgrep -xf rust-agent-based-models/src/main.rs wasm-agent-based-models/src/lib.rs
 ```
 
-## Do I need to copy code from one project into the other verbatim?
+## Why make these two separate projects? / Do I need to copy code from one project into the other verbatim?
 
-Probably not. Sometimes you want to copy the full model from one project to another, and sometimes you want to explore just one of the concepts or change one of the algorithms.
+Sometimes you want to copy the full model from one project to another, and sometimes you want to explore changes to just one of the concepts or algorithms. These projects are complementary rather than redundant.
 
 ## Does this repository use `unsafe` code?
 
 Not explicitly.
 
-## Acknowledgement
+## Acknowledgements
 
 This project was created using the [wasm-pack-template] template by the [rust-wasm] team.
 
+The `www/` directory comes from the [create-wasm-app] template by Ashley Williams of the [rust-wasm] team.
+
+[create-wasm-app]:https://github.com/rustwasm/create-wasm-app
 [diff]:https://man7.org/linux/man-pages/man1/diff.1.html
 [fgrep]:https://man7.org/linux/man-pages/man1/fgrep.1.html
 [graphical user interfaces]:https://www.areweguiyet.com/
