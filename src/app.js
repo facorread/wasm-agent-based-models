@@ -4,6 +4,9 @@ import { MDCRipple } from '@material/ripple';
 
 const fabRipple = new MDCRipple(document.querySelector('.mdc-fab'));
 
+const iconButtonRipple = new MDCRipple(document.querySelector('.mdc-icon-button'));
+iconButtonRipple.unbounded = true;
+
 function es_init() {
     // Webpack requires WebAssembly to be a dynamic import for now.
     import("/pkg/index.js").then(module => module.rs_init(), console.error);

@@ -1,6 +1,5 @@
 const autoprefixer = require("autoprefixer");
 const path = require("path");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 const dist = path.resolve(__dirname, "dist");
 
@@ -63,12 +62,6 @@ module.exports = {
     syncWebAssembly: true, // deprecated, see https://github.com/webpack/webpack/issues/11347
   },
   plugins: [
-    new CopyWebpackPlugin({
-      patterns: [
-        { from: "index.html" },
-        { from: "favicon.svg" },
-      ]
-    }),
     new WasmPackPlugin({
       crateDirectory: __dirname,
     }),

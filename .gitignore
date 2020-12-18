@@ -1,7 +1,6 @@
 bin/
 .cargo-ok
 Cargo.lock
-dist
 node_modules
 /target
 **/*.rs.bk

@@ -1,0 +1,19 @@
+@use "@material/card";
+@use "@material/fab";
+@use "@material/icon-button";
+
+@include card.core-styles;
+@include fab.core-styles;
+@include icon-button.core-styles;
+
+#abmmenu {
+    background-color: #f1f1f1;
+    height: 350px;
+    position: absolute;
+    width: 350px;
+}
+
+#abmmessage {
+    text-align: center;
+}
+
