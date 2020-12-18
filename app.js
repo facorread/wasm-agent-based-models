@@ -1,5 +1,9 @@
 "use strict";
 
+import { MDCRipple } from '@material/ripple';
+
+const fabRipple = new MDCRipple(document.querySelector('.mdc-fab'));
+
 function es_init() {
     // Webpack requires WebAssembly to be a dynamic import for now.
     import("/pkg/index.js").then(module => module.rs_init(), console.error);
