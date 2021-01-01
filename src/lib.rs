@@ -16,11 +16,21 @@
    limitations under the License.
 */
 
-mod utils;
-
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use web_sys::{Document, Element, EventTarget, HtmlElement, Window};
+
+#[wasm_bindgen(module = "/src/app.js")]
+extern "C" {
+    #[wasm_bindgen]
+    pub type JsAbmParams;
+    #[wasm_bindgen(method, getter)]
+    fn js_n0(this: &JsAbmParams) -> u32;
+    #[wasm_bindgen]
+    fn js_message(msg: &str);
+    #[wasm_bindgen]
+    fn js_error(msg: &str);
+}
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -29,7 +39,7 @@ use web_sys::{Document, Element, EventTarget, HtmlElement, Window};
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 // Use the tags begin-similar-code and end-similar-code to mark a block of code that is similar between rust-agent-based-models and wasm-agent-based-models.
-// begin-similar-code
+// begin-similar-code 1
 
 ///! This software uses the Entity-Component-System (ECS) architecture and other principles discussed at https://kyren.github.io/2018/09/14/rustconf-talk.html
 #[cfg(feature = "graphics")]
@@ -118,10 +128,10 @@ struct Scenario {
     time_series: std::vec::Vec<TimeStepResults>,
 }
 
-// end-similar-code
+// end-similar-code 1
 
 #[wasm_bindgen]
-pub fn rs_init() {
+pub fn rs_init(abm_params: &JsAbmParams) {
     // This provides better error messages in debug mode.
     // It's disabled in release mode so it doesn't bloat up the file size.
     #[cfg(debug_assertions)]
@@ -132,19 +142,12 @@ pub fn rs_init() {
     let document = window
         .document()
         .expect("Trying to communicate with the HTML document");
+    js_message(&format!(
+        "Welcome to wasm-agent-based-models! n0 = {}",
+        abm_params.js_n0()
+    ));
 
-    let abm_message = |msg: &str| {
-        // let message_element: &'static HtmlElement =
-        document
-            .get_element_by_id("abmmessage")
-            .expect("Setting up Messages")
-            .dyn_ref::<HtmlElement>()
-            .expect("Setting up the Messages element")
-            .set_inner_text(msg);
-    };
-    abm_message("Hello, wasm-agent-based-models!");
-
-    // begin-similar-code
+    // begin-similar-code 2
     // Model parameter: Initial number of agents
     let n0: usize = 1000;
     // Model parameter: Scale-free network parameter: new links per agent
@@ -162,10 +165,10 @@ pub fn rs_init() {
     let link_distro = Bernoulli::new(0.01).unwrap();
     let recovery_distro = Bernoulli::new(0.8).unwrap();
     let survival_distro = Bernoulli::new(0.8).unwrap();
-    // end-similar-code
+    // end-similar-code 2
     let mut scenario = Scenario::default();
     {
-        // begin-similar-code
+        // begin-similar-code 3
         // Use Pcg64 for reproducible random numbers; change to thread_rng for production
         // let mut rng = rand::thread_rng();
         #[allow(clippy::unreadable_literal)]
@@ -186,13 +189,13 @@ pub fn rs_init() {
             let _k: AgentKey = health.insert(Health::S);
         }
         let infection_distro = Bernoulli::new(scenario.infection_probability).unwrap();
-        // end-similar-code
+        // end-similar-code 3
         let model_mutex = std::sync::Mutex::new(0);
         let time_step_closure = Closure::wrap(Box::new(move || {
             let mut time_step_guard = model_mutex.lock().unwrap();
             let mut time_step_results: TimeStepResults = Default::default();
 
-            // begin-similar-code
+            // begin-similar-code 4
             // Initialization of this time step: Network seed
             #[cfg(feature = "net")]
             {
@@ -447,20 +450,20 @@ pub fn rs_init() {
             for _ in 0..nb {
                 health.insert(Health::S);
             }
-            // end-similar-code
+            // end-similar-code 4
             *time_step_guard = 1;
         }) as Box<dyn FnMut()>);
         // .set_onclick(Some(time_step_closure.as_ref().unchecked_ref()));
-        document
-            .get_element_by_id("abmmenuheader")
-            .expect("Trying to find the Step button")
-            .dyn_ref::<EventTarget>()
-            .expect("Setting click event")
-            .add_event_listener_with_callback(
-                &"click".to_owned(),
-                time_step_closure.as_ref().unchecked_ref(),
-            )
-            .unwrap();
-        time_step_closure.forget();
+        // document
+        //     .get_element_by_id("abmmenuheader")
+        //     .expect("Trying to find the Step button")
+        //     .dyn_ref::<EventTarget>()
+        //     .expect("Setting click event")
+        //     .add_event_listener_with_callback(
+        //         &"click".to_owned(),
+        //         time_step_closure.as_ref().unchecked_ref(),
+        //     )
+        //     .unwrap();
+        // time_step_closure.forget();
     }
 }

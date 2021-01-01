@@ -12,18 +12,54 @@
 <body>
     <noscript>This page contains WebAssembly and JavaScript content. Please enable JavaScript in your
         browser.</noscript>
-    <div class="mdc-card__actions" id="abmmenu">
-        <div id="abmmenuheader">
-            <p id="abmmenutitle">----</p>
+    <div class="mdc-card abm-draggable" id="abm-card">
+        <p class="abm-titles abm-draggable">Agent-based models in Rust and Wasm
+            <a href=" https://github.com/facorread/wasm-agent-based-models#readme"><i
+                    class="abm-section-title-icons material-icons">open_in_new</i></a>
+        </p>
+        <details open>
+            <summary class="abm-titles abm-draggable">Initial conditions</summary>
+            <div>
+                <div class="abm-param-label">n0 Initial number of agents (logarithmic slider)</div>
+                <div class="abm-param-inline">
+                    <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                        id="abm-n-agents-text">
+                        <span class="mdc-text-field__ripple"></span>
+                        <input class="mdc-text-field__input" type="number" placeholder="n0"
+                            aria-label="n0 Initial number of agents" min="1" max="30000" step=1 required>
+                        <span class="mdc-line-ripple"></span>
+                    </label>
+                    <div class="mdc-slider" id="abm-n-agents-slider">
+                        <div class="mdc-slider__track">
+                            <div class="mdc-slider__track--inactive"></div>
+                            <div class="mdc-slider__track--active">
+                                <div class="mdc-slider__track--active_fill"></div>
+                            </div>
+                        </div>
+                        <div class="mdc-slider__thumb" role="slider" tabindex="0" aria-label="Continuous slider demo"
+                            aria-valuemin="1" aria-valuemax="2000" aria-valuenow="1000">
+                            <div class="mdc-slider__thumb-knob"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </details>
+
+
+        <details id="abm-simulation-log">
+            <summary class="abm-titles abm-draggable">Simulation log</summary>
+            <div id="abm-logs">
+            </div>
+        </details>
+
+
+        <div class="mdc-card__actions abm-draggable">
+            <button class="mdc-icon-button material-icons">refresh</button>
+            <button class="mdc-fab" aria-label="start" id="start-stop">
+                <div class="mdc-fab__ripple"></div>
+                <span class="mdc-fab__icon material-icons">play_arrow</span>
+            </button>
         </div>
-        <div>
-            <p id="abmmessage">Messages go here</p>
-        </div>
-        <button class="mdc-icon-button material-icons">favorite</button>
-        <button class="mdc-fab" aria-label="start" id="start-stop">
-            <div class="mdc-fab__ripple"></div>
-            <span class="mdc-fab__icon material-icons">play_arrow</span>
-        </button>
     </div>
     <canvas id="canvas" width="100%" height="100%"></canvas>
 </body>

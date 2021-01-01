@@ -20,13 +20,13 @@ Rust offers a range of tools to develop [graphical user interfaces] (GUIs); in 2
 
 ## Getting started
 
-To get started with wasm-agent-based models, decent knowledge of html, css, and javascript is required. You should also read the [Rust and WebAssembly book], and follow the setup instructions therein. `npm` is strongly recommended.
+To get started with wasm-agent-based models, decent knowledge of html, css, and javascript is required. You should also read the [Rust and WebAssembly book], and follow the setup instructions therein. [`npm`] is required.
 
 After you have started with [rust-agent-based-models], [Clone this repository] (`https://github.com/facorread/wasm-agent-based-models.git`) and use your favorite terminal to run `wasm-pack build --target web`. Follow the instructions on screen.
 
-Once you have verified that the code builds, take some time to understand the similarities and differences between this project and [rust-agent-based-models]. This allows you to see the code that needs to be copied from one project into the other, and decide what parameters you want to explore as you work on designing your own ABM.
+Once you have verified that the code builds, take some time to understand the similarities and differences between this project and [rust-agent-based-models]. Look for the `begin-similar-code` markers for blocks of code that both projects have in common, and then use this project for manually exploring parameters from your ABM.
 
-To examine the differences between the two programs, you can use `[diff]`, for example:
+You can also use `[diff]` to examine differences between the two programs, for example:
 
 ```bash
 diff -u rust-agent-based-models/src/main.rs wasm-agent-based-models/src/lib.rs
@@ -42,6 +42,12 @@ fgrep -xf rust-agent-based-models/src/main.rs wasm-agent-based-models/src/lib.rs
 
 Sometimes you want to copy the full model from one project to another, and sometimes you want to explore changes to just one of the concepts or algorithms. These projects are complementary rather than redundant.
 
+## Why Javascript? Typescript is safer.
+
+I am eager to use Typescript as soon as possible. However, both webpack versions 5 and 4 bundle Wasm into the initial chunk when invoked from `app.ts`, which prevents Typescript from loading Wasm asynchronously. Wasm support is experimental in both Webpack and ts-loader. Contributing to said support seems like a better gift to the community than just hacking Typescript into this one project.
+
+Let us stick to Javascript for now.
+
 ## Does this repository use `unsafe` code?
 
 Not explicitly.
@@ -56,6 +62,7 @@ The `www/` directory comes from the [create-wasm-app] template by Ashley William
 [diff]:https://man7.org/linux/man-pages/man1/diff.1.html
 [fgrep]:https://man7.org/linux/man-pages/man1/fgrep.1.html
 [graphical user interfaces]:https://www.areweguiyet.com/
+[`npm`]:https://www.npmjs.com/get-npm
 [rust-agent-based-models]:https://github.com/facorread/rust-agent-based-models
 [Rust and WebAssembly book]:https://rustwasm.github.io/docs/book/
 [rust-wasm]:https://rustwasm.github.io/

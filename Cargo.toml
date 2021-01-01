@@ -22,6 +22,8 @@ description = "Reliable and efficient agent-based models in Rust and WebAssembly
 edition = "2018"
 license = "Apache-2.0"
 repository = "https://github.com/facorread/wasm-agent-based-models"
+# Disable WASM optimization
+wasm-opt = false
 
 [lib]
 crate-type = ["cdylib"]
@@ -37,6 +39,7 @@ rand_distr = "0.3.0"
 rand_pcg = "0.2.1"
 slotmap = "0.4.0"
 wasm-bindgen = "0.2.69"
+wasm-bindgen-futures = "0.4.19"
 wrapping_coords2d = "0.1.9"
 
 [dependencies.console_error_panic_hook]
@@ -64,5 +67,11 @@ wasm-bindgen-test = "0.3.19"
 
 [profile.release]
 # Tell `rustc` to optimize for small code size.
-opt-level = "s"
-lto = true
+# lto = true
+# opt-level = "s"
+
+# Or tell rust to enable full debug
+debug = true
+lto = "off"
+opt-level = 0
+wasm-opt = false

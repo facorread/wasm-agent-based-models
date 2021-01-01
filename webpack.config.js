@@ -4,7 +4,8 @@ const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 const dist = path.resolve(__dirname, "dist");
 
 module.exports = {
-  entry: ["./app.scss", "./app.js"],
+  mode: "development",
+  entry: ["./src/app.scss", "./src/app.js"],
   output: {
     filename: "bundle.js",
   },
@@ -57,8 +58,10 @@ module.exports = {
   },
   devServer: {
     static: dist,
+    hot: false,
   },
   experiments: {
+    asyncWebAssembly: false,
     syncWebAssembly: true, // deprecated, see https://github.com/webpack/webpack/issues/11347
   },
   plugins: [

@@ -1,19 +1,101 @@
 @use "@material/card";
 @use "@material/fab";
 @use "@material/icon-button";
+@use "@material/slider/slider";
+@use "@material/floating-label/mdc-floating-label";
+@use "@material/line-ripple/mdc-line-ripple";
+@use "@material/notched-outline/mdc-notched-outline";
+@use "@material/textfield";
 
 @include card.core-styles;
 @include fab.core-styles;
 @include icon-button.core-styles;
+@include slider.core-styles;
+@include textfield.core-styles;
 
-#abmmenu {
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
+
+$abm-primary-color: #6200ee;
+$abm-secondary-color: #03DAC6;
+$abm-density-scale: 0;
+
+a:link, a:visited, a:hover, a:active {
+    text-decoration: none;
+}
+
+body {
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+}
+
+#abm-card {
     background-color: #f1f1f1;
-    height: 350px;
     position: absolute;
+    touch-action: none;
     width: 350px;
 }
 
-#abmmessage {
+.abm-center {
     text-align: center;
 }
 
+.abm-param-inline {
+    display: flex;
+    // background-color: yellow;
+}
+
+#abm-logs {
+    font-size: small;
+    height: 100px;
+    overflow: auto;
+    p {
+        margin: 0;
+    }
+}
+
+.abm-titles {
+    color: rgba(0, 0, 0, 0.54);
+    font-weight: 500;
+    text-transform: uppercase;
+    user-select: none;
+    &:hover, &:focus {
+      color: rgba(0, 0, 0, 0.87);
+    }
+}
+
+.abm-section-title-icons {
+    font-size: inherit !important;
+    line-height: inherit !important;
+    vertical-align: -2px;
+}
+
+.mdc-slider {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 300px;
+    .mdc-slider__input {
+          cursor: pointer;
+          left: 0;
+          margin: 0;
+          height: 100%;
+          opacity: 0;
+          pointer-events: none;
+          position: absolute;
+          top: 0;
+          width: 100%;
+      }
+}
+
+.mdc-text-field {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 100px;
+    margin-left: 20px;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.mdc-text-field {
+    @include textfield.outlined-density(-2); // Fixed to match the height of sliders
+}
