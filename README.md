@@ -48,6 +48,10 @@ I am eager to use Typescript as soon as possible. However, both webpack versions
 
 Let us stick to Javascript for now.
 
+## Why is the animation so large? Can we get rid of the scroll bars?
+
+The animation frames have the same size in both projects, 1920x1080. Websites have a logical representation that is usually smaller. I was aiming to make this a responsive project, able to adapt to any screen size. However, browsers do not work well when we adapt the canvas element. I annotated file `app.scss` with specific examples. My recommendation is to manually adjust the browser zoom to fit your needs.
+
 ## Why is the model so slow?
 
 The model is in development mode by default, which enables debugging of the Rust and Javascript code; debugging is time-consuming. In file `webpack.config.js` you can change the mode to production, which speeds up the model considerably.
