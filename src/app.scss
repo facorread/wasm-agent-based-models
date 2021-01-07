@@ -26,13 +26,26 @@ a:link, a:visited, a:hover, a:active {
 body {
     font-family: Roboto, sans-serif;
     font-weight: 400;
+    height: 100%;
+    margin: 0;
+}
+
+#abm-canvas {
+    cursor: wait;
+    // transform: matrix(0.5, 0, 0, 0.5, -400, -250); // BUG: If the canvas is transformed, Chrome shows it on top of the panel.
+}
+
+#abm-canvas-container {
+    height: 100%;
 }
 
 #abm-card {
     background-color: #f1f1f1;
+    padding: 0 10px;
     position: absolute;
     touch-action: none;
-    width: 350px;
+    width: 370px;
+    // transform: matrix(2, 0, 0, 2, -400, -250);  // BUG: If the panel is transformed, the Material components get distorted.
 }
 
 .abm-center {
@@ -67,6 +80,10 @@ body {
     font-size: inherit !important;
     line-height: inherit !important;
     vertical-align: -2px;
+}
+
+html {
+    height: 100%;
 }
 
 .mdc-slider {

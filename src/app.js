@@ -85,10 +85,10 @@ class JsSliderValue {
         this.numeric_value = initial_value;
         this.private_set_slider_value(initial_value);
         this.text.value = initial_value.toString();
-        this.text.valid = true;
-        slider_element.addEventListener("MDCSlider:input", slider_listener, false);
-        text_element.addEventListener("input", text_listener, false);
-        text_element.addEventListener("change", text_change_listener, false);
+        this.valid = true;
+        slider_element.addEventListener("MDCSlider:input", slider_listener);
+        text_element.addEventListener("input", text_listener);
+        text_element.addEventListener("change", text_change_listener);
         let myself = this;
         text_listener();
         text_change_listener();
@@ -109,10 +109,10 @@ class JsSliderValue {
                 }
             }
             myself.text.value = myself.numeric_value;
-            myself.text.valid = true;
+            myself.valid = true;
         }
         function text_listener(event) {
-            if (myself.text.valid) {
+            if (myself.valid) {
                 myself.numeric_value = parseFloat(myself.text.value);
                 let new_slider_position;
                 if (myself.logarithmic) {
@@ -130,8 +130,8 @@ class JsSliderValue {
         function text_change_listener() {
             let parsed_value = parseFloat(myself.text.value);
             myself.text.value = parsed_value;
-            if (!myself.text.valid) {
-                myself.text.valid = false;
+            if (!myself.valid) {
+                myself.valid = false;
                 if (myself.text.value == "") {
                     // throw new Error("Error: Make sure to enter a valid number.");
                     js_error("Error: Make sure to enter a valid number.");
@@ -166,18 +166,114 @@ class JsSliderValue {
     get value() {
         return this.numeric_value;
     }
+    get valid() {
+        return this.text.valid;
+    }
+    set valid(new_value) {
+        this.text.valid = new_value;
+    }
 }
 
 export class JsAbmParams {
     constructor() {
         this.nAgents0 = new JsSliderValue(1000, true, "abm-n-agents-slider", "abm-n-agents-text");
-        // this.layout();
+        this.worldLength = new JsSliderValue(10, false, "abm-world-length-slider", "abm-world-length-text");
+        this.fps = new JsSliderValue(1, false, "abm-fps-slider", "abm-fps-text");
     }
     layout() {
         this.nAgents0.layout();
+        this.worldLength.layout();
     }
-    get js_n0() {
+    js_n0() {
         return this.nAgents0.value;
+    }
+    js_world_length() {
+        return this.worldLength.value;
+    }
+    rs_deploy_scenario() {
+        this.rs_mod.rs_deploy_scenario(this);
+    }
+    frame_duration() {
+        // The delay argument is converted to a signed 32-bit integer https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval#Delay_restrictions
+        // We convert it to integer first for comparison purposes.
+        return Math.trunc(1000.0 / this.fps.value);
+    }
+    js_sim(rs_step_closure) {
+        // let abm_body = js_get_id("abm-body");
+        let abm_canvas = js_get_id("abm-canvas");
+        // let abm_canvas_context = abm_canvas.getContext("2d");
+        let start_stop = js_get_id("start-stop");
+        let start_stop_label = js_get_id("start-stop-label");
+        let abm_running = false;
+        let interval_id;
+        let abm_frame_duration = this.frame_duration();
+        let abm_allow_buttons = true; // Prevents spurious/anxious clicks
+        let abm_allow_step = true; // Prevents simulation from going too fast
+        let myself = this;
+        function step_handler() {
+            if (abm_allow_step) {
+                abm_allow_step = false;
+                // The following code was supposed to scale the canvas to fit into the browser window. Unfortunately, Chrome and plotters distort the output plots.
+                // let width = abm_body.offsetWidth;
+                // let height = abm_body.offsetHeight;
+                // abm_canvas.width = width;
+                // abm_canvas.height = height;
+                // let scaleX = width / 1280;
+                // let scaleY = height / 720;
+                // let abm_scale = Math.min(scaleX, scaleY);
+                // js_message("Width " + width + " Height " + height + " scaleX " + scaleX + " scaleY " + scaleY + " abm_scale " + abm_scale + ".");
+                // abm_canvas_context.scale(scaleX, scaleY);
+                let new_frame_duration = myself.frame_duration();
+                if (myself.fps.valid && (abm_frame_duration != new_frame_duration)) {
+                    abm_frame_duration = new_frame_duration;
+                    clearInterval(interval_id);
+                    interval_id = setInterval(step_handler, abm_frame_duration);
+                }
+                rs_step_closure();
+                abm_allow_step = true;
+            }
+        }
+        abm_canvas.style.cursor = "busy";
+        step_handler(); // Shows the first frame of the sim
+        abm_canvas.style.cursor = "initial";
+        function stop_impl() {
+            abm_running = false;
+            start_stop_label.innerText = "play_arrow";
+        }
+        stop_impl();
+        function start_stop_handler(event) {
+            if (abm_allow_buttons) {
+                abm_allow_buttons = false;
+                if (abm_running) {
+                    clearInterval(interval_id);
+                    stop_impl();
+                } else {
+                    abm_running = true;
+                    abm_frame_duration = myself.frame_duration();
+                    step_handler();
+                    interval_id = setInterval(step_handler, abm_frame_duration);
+                    start_stop_label.innerText = "pause";
+                }
+                abm_allow_buttons = true;
+            }
+        };
+        start_stop.addEventListener("click", start_stop_handler);
+        let reset_button = js_get_id("abm-reset-button");
+        function reset_button_handler(event) {
+            if (abm_allow_buttons) {
+                abm_allow_buttons = false;
+                if (abm_running) {
+                    clearInterval(interval_id);
+                    stop_impl();
+                }
+                start_stop.removeEventListener("click", start_stop_handler);
+                reset_button.removeEventListener("click", reset_button_handler);
+                // Restart simulation here
+                myself.rs_deploy_scenario();
+                abm_allow_buttons = true;
+            }
+        };
+        reset_button.addEventListener("click", reset_button_handler);
     }
 }
 
@@ -194,7 +290,12 @@ function js_init() {
         // const lineRipple = new MDCLineRipple(document.querySelector('.mdc-line-ripple'));
 
         // Webpack requires WebAssembly to be a dynamic import for now.
-        import("/pkg/index.js").then(module => module.rs_init(abm_params), console.error);
+        import("/pkg/index.js").then(rs_deploy_scenario, console.error);
+
+        function rs_deploy_scenario(module) {
+            abm_params.rs_mod = module;
+            abm_params.rs_deploy_scenario();
+        }
     }
     {
         let left_offset = 0, top_offset = 0, abm_card = js_get_id("abm-card");

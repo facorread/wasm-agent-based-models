@@ -5,6 +5,7 @@ const dist = path.resolve(__dirname, "dist");
 
 module.exports = {
   mode: "development",
+  // mode: "production",
   entry: ["./src/app.scss", "./src/app.js"],
   output: {
     filename: "bundle.js",
