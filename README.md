@@ -48,6 +48,10 @@ I am eager to use Typescript as soon as possible. However, both webpack versions
 
 Let us stick to Javascript for now.
 
+## Why is the model so slow?
+
+The model is in development mode by default, which enables debugging of the Rust and Javascript code; debugging is time-consuming. In file `webpack.config.js` you can change the mode to production, which speeds up the model considerably.
+
 ## Does this repository use `unsafe` code?
 
 Not explicitly.

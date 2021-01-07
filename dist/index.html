@@ -9,10 +9,10 @@
     <link rel="icon" href="favicon.svg" sizes="any" type="image/svg+xml">
 </head>
 
-<body id="abm-body">
+<body class="abm-get-busy" id="abm-body">
     <noscript>This page contains WebAssembly and JavaScript content. Please enable JavaScript in your
         browser.</noscript>
-    <div class="mdc-card abm-draggable" id="abm-card">
+    <div class="mdc-card abm-draggable abm-get-busy" id="abm-card">
         <p class="abm-titles abm-draggable">Agent-based models in Rust and Wasm
             <a href=" https://github.com/facorread/wasm-agent-based-models#readme"><i
                     class="abm-section-title-icons material-icons">open_in_new</i></a>
@@ -98,14 +98,14 @@
 
 
         <div class="mdc-card__actions abm-draggable">
-            <button class="mdc-icon-button material-icons" id="abm-reset-button">refresh</button>
-            <button class="mdc-fab" aria-label="start" id="start-stop">
+            <button class="mdc-icon-button material-icons abm-get-busy" id="abm-reset-button">refresh</button>
+            <button class="mdc-fab abm-get-busy" aria-label="start" id="start-stop">
                 <div class="mdc-fab__ripple"></div>
                 <span class="mdc-fab__icon material-icons" id="start-stop-label">play_arrow</span>
             </button>
         </div>
     </div>
-    <canvas id="abm-canvas" width="1920" height="1080"></canvas>
+    <canvas class="abm-get-busy" id="abm-canvas" width="1920" height="1080"></canvas>
 </body>
 
 </html>

@@ -32,6 +32,33 @@ function js_get_id(id) {
     return elem;
 }
 
+function js_get_class(class_name) {
+    let collection = document.getElementsByClassName(class_name);
+    if (collection.length == 0) {
+        // console.error("Fatal: Element " + id + " was not found in index.html");
+        throw new Error("Fatal: No elements of class " + class_name + " were found in index.html");
+    }
+    return collection;
+}
+
+function js_visually_busy(expensive_closure) {
+    let abm_get_busy = js_get_class("abm-get-busy");
+    let was_already_busy = (abm_get_busy[0].classList.contains("abm-busy"));
+    if (was_already_busy) {
+        expensive_closure();
+    } else {
+        for (let el of abm_get_busy) {
+            el.classList.add("abm-busy");
+        }
+        setTimeout(function () {
+            expensive_closure();
+            for (let el of abm_get_busy) {
+                el.classList.remove("abm-busy");
+            }
+        }, 100);
+    }
+}
+
 function js_message_with_color(msg, show_error) {
     let abm_logs = js_get_id("abm-logs");
     let p = document.createElement("p");
@@ -233,9 +260,7 @@ export class JsAbmParams {
                 abm_allow_step = true;
             }
         }
-        abm_canvas.style.cursor = "busy";
-        step_handler(); // Shows the first frame of the sim
-        abm_canvas.style.cursor = "initial";
+        js_visually_busy(step_handler); // Shows the first frame of the sim
         function stop_impl() {
             abm_running = false;
             start_stop_label.innerText = "play_arrow";
@@ -262,14 +287,16 @@ export class JsAbmParams {
         function reset_button_handler(event) {
             if (abm_allow_buttons) {
                 abm_allow_buttons = false;
-                if (abm_running) {
-                    clearInterval(interval_id);
-                    stop_impl();
-                }
-                start_stop.removeEventListener("click", start_stop_handler);
-                reset_button.removeEventListener("click", reset_button_handler);
-                // Restart simulation here
-                myself.rs_deploy_scenario();
+                js_visually_busy(function () {
+                    if (abm_running) {
+                        clearInterval(interval_id);
+                        stop_impl();
+                    }
+                    start_stop.removeEventListener("click", start_stop_handler);
+                    reset_button.removeEventListener("click", reset_button_handler);
+                    // Restart simulation here
+                    myself.rs_deploy_scenario();
+                });
                 abm_allow_buttons = true;
             }
         };
@@ -289,13 +316,15 @@ function js_init() {
         }
         // const lineRipple = new MDCLineRipple(document.querySelector('.mdc-line-ripple'));
 
-        // Webpack requires WebAssembly to be a dynamic import for now.
-        import("/pkg/index.js").then(rs_deploy_scenario, console.error);
+        js_visually_busy(function () {
+            // Webpack requires WebAssembly to be a dynamic import for now.
+            import("/pkg/index.js").then(rs_deploy_scenario, console.error);
 
-        function rs_deploy_scenario(module) {
-            abm_params.rs_mod = module;
-            abm_params.rs_deploy_scenario();
-        }
+            function rs_deploy_scenario(module) {
+                abm_params.rs_mod = module;
+                abm_params.rs_deploy_scenario();
+            }
+        });
     }
     {
         let left_offset = 0, top_offset = 0, abm_card = js_get_id("abm-card");
