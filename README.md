@@ -48,9 +48,13 @@ I am eager to use Typescript as soon as possible. However, both webpack versions
 
 Let us stick to Javascript for now.
 
-## Why is the animation so large? Can we get rid of the scroll bars?
+## Why is the animation so large? Can we adapt it to screen size instead?
 
-The animation frames have the same size in both projects, 1920x1080. Websites have a logical representation that is usually smaller. I was aiming to make this a responsive project, able to adapt to any screen size. However, browsers do not work well when we adapt the canvas element. I annotated file `app.scss` with specific examples. My recommendation is to manually adjust the browser zoom to fit your needs.
+The animation frames have the same size in both projects, 1920x1080. Websites have a logical representation that is usually smaller. I was aiming to make this a responsive project, able to adapt to any screen size. However, browsers do not work well when we resize the canvas element. I annotated file `app.scss` with specific examples. My recommendation is to manually adjust the browser zoom to fit your needs.
+
+## How do we set the minimum, maximum, step size of the model parameters?
+
+For the sliders that are accompanied by input boxes, such as the Simulation speed slider, please set the values in the `JsSliderValue` constructor in `app.js`. This is the preferred method because it matches the values between the two controls. Consider the values in `index.html` as placeholders for copying and pasting around. For the other controls, feel free to set the values in `index.html` or use Javascript.
 
 ## Why is the model so slow?
 

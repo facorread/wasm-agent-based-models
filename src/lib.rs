@@ -26,6 +26,7 @@ extern "C" {
     // https://docs.rs/wasm-bindgen/0.2.69/wasm_bindgen/closure/struct.Closure.html
     fn js_n0() -> u32;
     fn js_world_length() -> i32;
+    fn js_infection_probability() -> f64;
     fn js_dark_figures() -> bool;
     fn js_scenario(rs_step_closure: &::js_sys::Function);
     fn js_message(msg: &str);
@@ -192,11 +193,12 @@ pub fn rs_deploy_scenario() {
     while health.len() < n0 {
         let _k: AgentKey = health.insert(Health::S);
     }
-    let infection_distro = Bernoulli::new(scenario.infection_probability).unwrap();
     // end-similar-code 2
     let mut time_step = 0;
     let rs_step_closure = Closure::wrap(Box::new(move || {
         let mut time_step_results: TimeStepResults = Default::default();
+        scenario.infection_probability = js_infection_probability();
+        let infection_distro = Bernoulli::new(scenario.infection_probability).unwrap();
 
         // begin-similar-code 3
         // Initialization of this time step: Network seed

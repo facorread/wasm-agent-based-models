@@ -84,37 +84,69 @@ export function js_error(msg) {
     js_message_with_color(msg, true);
 }
 
+function set_min_max_step(elem, value, min, max, step) {
+    elem.setAttribute("value", value);
+    elem.setAttribute("min", min);
+    elem.setAttribute("max", max);
+    elem.setAttribute("step", step);
+}
+
 // Links a continuous slider with a textfield to show the numerical value continuously.
 // Set the minimum and maximum values in index.html.
 class JsSliderValue {
-    constructor(initial_value, use_logarithmic_slider, slider_id, text_id) {
-        let slider_element = js_get_id(slider_id);
-        this.slider = new MDCSlider(slider_element);
+    constructor(initial_value, text_min, text_max, slider_min, slider_max, step_size, use_logarithmic_slider, slider_id, text_id) {
+        // number: initial_value, text_min, text_max, slider_min, slider_max, step_size
+        // bool: use_logarithmic_slider
+        // string: slider_id, text_id
+
+        // Set the HTML attributes before initializing the Material Components
         let text_element = js_get_id(text_id);
+        let slider_element = js_get_id(slider_id);
+        set_min_max_step(text_element, initial_value, text_min, text_max, step_size);
+        this.numeric_value = initial_value;
+        this.slider_min = slider_min;
+        this.slider_max = slider_max;
+        this.text_min = text_min;
+        this.text_max = text_max;
+        this.step_size = step_size;
+        this.logarithmic = use_logarithmic_slider;
+        if (!(step_size > 0)) {
+            js_error("Error: JsSliderValue " + slider_id + " has a step of " + step_size + ". Please make it a valid positive value.");
+            throw new Error("Error: JsSliderValue " + slider_id + " has a step of " + step_size + ". Please make it a valid positive value.");
+        }
+        if (slider_min >= slider_max) {
+            js_error("Error: Slider " + slider_id + " has a minimum of " + slider_min + ". Please review app.js to change it to a value smaller than " + slider_max + ".");
+            throw new Error("Error: Slider " + slider_id + " has a minimum of " + slider_min + ". Please review app.js to change it to a value smaller than " + slider_max + ".");
+        }
+        if (slider_min < text_min) {
+            js_error("Error: Slider " + slider_id + " has a minimum of " + slider_min + ". Please review index.html to change it to a value larger than " + text_min + ", which is the minimum of the text field.");
+            throw new Error("Error: Slider " + slider_id + " has a minimum of " + slider_min + ". Please review index.html to change it to a value larger than " + text_min + ", which is the minimum of the text field.");
+        }
+        if (slider_max > text_max) {
+            js_error("Error: Slider " + slider_id + " has a maximum of " + slider_max + ". Please review index.html to change it to a value smaller than " + text_max + ", which is the maximum of the text field.");
+            throw new Error("Error: Slider " + slider_id + " has a maximum of " + slider_max + ". Please review index.html to change it to a value smaller than " + text_max + ", which is the maximum of the text field.");
+        }
+        if (use_logarithmic_slider) {
+            if (slider_min <= 0) {
+                js_error("Error: Logarithmic slider " + slider_id + " has a minimum of " + slider_min + ". Please review index.html to change it to a value larger than 0.");
+                throw new Error("Error: Logarithmic slider " + slider_id + " has a minimum of " + slider_min + ". Please review index.html to change it to a value larger than 0.");
+            }
+            if (slider_max <= 0) {
+                js_error("Error: Logarithmic slider " + slider_id + " has a maximum of " + slider_max + ". Please review index.html to change it to a value larger than 0.");
+                throw new Error("Error: Logarithmic " + slider_id + " slider has a maximum of " + slider_max + ". Please review index.html to change it to a value larger than 0.");
+            }
+            this.log_min = Math.log(slider_min);
+            this.log_scale = (Math.log(slider_max) - this.log_min) / (slider_max - slider_min);
+            let log_step_size = slider_max - this.private_calculate_slider_position(slider_max - step_size);
+            set_min_max_step(slider_element, this.private_calculate_slider_position(initial_value), slider_min, slider_max, log_step_size);
+        } else {
+            set_min_max_step(slider_element, initial_value, slider_min, slider_max, step_size);
+        }
+
+        // console.log("initial_value " + initial_value + " text_min " + text_min + " text_max " + text_max + " slider_min " + slider_min + " slider_max " + slider_max + " step_size " + step_size + " use_logarithmic_slider " + use_logarithmic_slider + " text_id " + text_id + " slider_id " + slider_id);
+        this.slider = new MDCSlider(slider_element);
         this.text = new MDCTextField(text_element);
 
-        if (this.slider.foundation.min < this.text.min) {
-            js_error("Error: The slider has a minimum of " + this.slider.foundation.min + ". Please review index.html to change it to a value larger than " + this.text.min + ", which is the minimum of the text field.");
-            throw new Error("Error: The slider has a minimum of " + this.slider.foundation.min + ". Please review index.html to change it to a value larger than " + this.text.min + ", which is the minimum of the text field.");
-        }
-        if (this.slider.foundation.max > this.text.max) {
-            js_error("Error: The slider has a maximum of " + this.slider.foundation.max + ". Please review index.html to change it to a value smaller than " + this.text.max + ", which is the maximum of the text field.");
-            throw new Error("Error: The slider has a maximum of " + this.slider.foundation.max + ". Please review index.html to change it to a value smaller than " + this.text.max + ", which is the maximum of the text field.");
-        }
-        this.logarithmic = use_logarithmic_slider;
-        if (use_logarithmic_slider) {
-            if (this.slider.foundation.min <= 0) {
-                js_error("Error: The logarithmic slider has a minimum of " + this.slider.foundation.min + ". Please review index.html to change it to a value larger than 0.");
-                throw new Error("Error: The logarithmic slider has a minimum of " + this.slider.foundation.min + ". Please review index.html to change it to a value larger than 0.");
-            }
-            if (this.slider.foundation.max <= 0) {
-                js_error("Error: The logarithmic slider has a maximum of " + this.slider.foundation.max + ". Please review index.html to change it to a value larger than 0.");
-                throw new Error("Error: The logarithmic slider has a maximum of " + this.slider.foundation.max + ". Please review index.html to change it to a value larger than 0.");
-            }
-            this.log_min = Math.log(this.slider.foundation.min);
-            this.log_scale = (Math.log(this.slider.foundation.max) - this.log_min) / (this.slider.foundation.max - this.slider.foundation.min);
-        }
-        this.numeric_value = initial_value;
         this.private_set_slider_value(initial_value);
         this.text.value = initial_value.toString();
         this.valid = true;
@@ -126,20 +158,15 @@ class JsSliderValue {
         text_change_listener();
         function slider_listener(event) {
             if (myself.logarithmic) {
-                if (myself.slider.getValue() < myself.slider.foundation.max) {
-                    myself.numeric_value = Math.exp(myself.log_min + myself.log_scale * (myself.slider.getValue() - myself.slider.foundation.min));
+                if (myself.slider.getValue() < myself.slider_max) {
+                    myself.private_parse_slider_position();
                 } else {
-                    myself.numeric_value = myself.slider.foundation.max;
+                    myself.numeric_value = myself.slider_max;
                 }
             } else {
                 myself.numeric_value = myself.slider.getValue();
             }
-            if (myself.text.step != 0) {
-                myself.numeric_value -= ((myself.numeric_value - myself.text.min) % myself.text.step);
-                if (myself.numeric_value < myself.text.min) {
-                    myself.numeric_value = myself.text.min
-                }
-            }
+            myself.numeric_value = Math.round((myself.numeric_value - myself.text_min) / myself.step_size) * myself.step_size + myself.text_min;
             myself.text.value = myself.numeric_value;
             myself.valid = true;
         }
@@ -149,9 +176,9 @@ class JsSliderValue {
                 let new_slider_position;
                 if (myself.logarithmic) {
                     if (myself.numeric_value > 0) {
-                        new_slider_position = ((Math.log(myself.numeric_value) - myself.log_min) / myself.log_scale) + myself.slider.foundation.min;
+                        new_slider_position = myself.private_calculate_slider_position(myself.numeric_value);
                     } else {
-                        new_slider_position = myself.slider.foundation.min;
+                        new_slider_position = myself.slider_min;
                     }
                 } else {
                     new_slider_position = myself.numeric_value;
@@ -174,11 +201,17 @@ class JsSliderValue {
             }
         }
     }
+    private_calculate_slider_position(value) {
+        return ((Math.log(value) - this.log_min) / this.log_scale) + this.slider_min;
+    }
+    private_parse_slider_position() {
+        this.numeric_value = Math.exp(this.log_min + this.log_scale * (this.slider.getValue() - this.slider_min));
+    }
     private_set_slider_value(new_value) {
-        if (new_value < this.slider.foundation.min) {
-            this.slider.setValue(this.slider.foundation.min);
-        } else if (new_value > this.slider.foundation.max) {
-            this.slider.setValue(this.slider.foundation.max);
+        if (new_value < this.slider_min) {
+            this.slider.setValue(this.slider_min);
+        } else if (new_value > this.slider_max) {
+            this.slider.setValue(this.slider_max);
         } else {
             this.slider.setValue(new_value);
         }
@@ -212,23 +245,33 @@ function layout() {
     window.abm.dark_figures_switch.layout();
     window.abm.fps.layout();
 }
+
 export function js_n0() {
     return window.abm.nAgents0.value;
 }
+
 export function js_world_length() {
     return window.abm.worldLength.value;
 }
+
+export function js_infection_probability() {
+    return window.abm.infection_probability.value;
+}
+
 export function js_dark_figures() {
     return window.abm.dark_figures_switch.checked;
 }
+
 function rs_deploy_scenario() {
     window.abm.rs_mod.rs_deploy_scenario();
 }
+
 function frame_duration() {
     // The delay argument is converted to a signed 32-bit integer https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval#Delay_restrictions
     // We convert it to integer first for comparison purposes.
     return Math.trunc(1000.0 / window.abm.fps.value);
 }
+
 export function js_scenario(rs_step_closure) {
     // let abm_body = js_get_id("abm-body");
     let abm_canvas = js_get_id("abm-canvas");
@@ -321,10 +364,11 @@ function js_init() {
             //     const switchControl = new MDCSwitch(el);
             // }
             window.abm = {};
-            window.abm.nAgents0 = new JsSliderValue(1000, true, "abm-n-agents-slider", "abm-n-agents-text");
-            window.abm.worldLength = new JsSliderValue(10, false, "abm-world-length-slider", "abm-world-length-text");
-            window.abm.fps = new JsSliderValue(1, false, "abm-fps-slider", "abm-fps-text");
+            window.abm.nAgents0 = new JsSliderValue(1000, 1, 2000, 1, 2000, 1, true, "abm-n-agents-slider", "abm-n-agents-text");
+            window.abm.worldLength = new JsSliderValue(10, 2, 200, 2, 200, 1, false, "abm-world-length-slider", "abm-world-length-text");
+            window.abm.fps = new JsSliderValue(1, 0.25, 100, 0.25, 100, 0.25, false, "abm-fps-slider", "abm-fps-text");
             window.abm.dark_figures_switch = new MDCSwitch(js_get_id("abm-dark-mode-switch"));
+            window.abm.infection_probability = new JsSliderValue(0.5, 0, 1, 0, 1, 0.01, false, "abm-infection-probability-slider", "abm-infection-probability-text");
 
             // Webpack requires WebAssembly to be a dynamic import for now.
             import("/pkg/index.js").then(function (module) {

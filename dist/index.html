@@ -24,11 +24,11 @@
                 <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label" id="abm-n-agents-text">
                     <span class="mdc-text-field__ripple"></span>
                     <input class="mdc-text-field__input" type="number" placeholder="n0"
-                        aria-label="n0 Initial number of agents" min="1" max="30000" step=1 required>
+                        aria-label="n0 Initial number of agents" min="1" max="30000" step="1" required>
                     <span class="mdc-line-ripple"></span>
                 </label>
                 <div class="mdc-slider" id="abm-n-agents-slider">
-                    <input class="mdc-slider__input" type="range" min="1" max="2000" value="1000"
+                    <input class="mdc-slider__input" type="range" min="1" max="2000" step="1" value="1000"
                         name="abm-n-agents-slider-input" aria-label="n0 Initial number of agents">
                     <div class="mdc-slider__track">
                         <div class="mdc-slider__track--inactive"></div>
@@ -48,11 +48,11 @@
                     id="abm-world-length-text">
                     <span class="mdc-text-field__ripple"></span>
                     <input class="mdc-text-field__input" type="number" placeholder="side"
-                        aria-label="World size: number of cells per side" min="2" max="500" step=1 required>
+                        aria-label="World size: number of cells per side" min="2" max="500" step="1" required>
                     <span class="mdc-line-ripple"></span>
                 </label>
                 <div class="mdc-slider" id="abm-world-length-slider">
-                    <input class="mdc-slider__input" type="range" min="2" max="200" value="100"
+                    <input class="mdc-slider__input" type="range" min="2" max="200" step="1" value="100"
                         name="abm-world-length-slider-input" aria-label="World size: number of cells per side">
                     <div class="mdc-slider__track">
                         <div class="mdc-slider__track--inactive"></div>
@@ -86,11 +86,11 @@
                 <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label" id="abm-fps-text">
                     <span class="mdc-text-field__ripple"></span>
                     <input class="mdc-text-field__input" type="number" placeholder="side"
-                        aria-label="Simulation speed: frames per second" min="0.25" max="250" step=0.25 required>
+                        aria-label="Simulation speed: frames per second" min="0.25" max="250" step="0.25" required>
                     <span class="mdc-line-ripple"></span>
                 </label>
                 <div class="mdc-slider" id="abm-fps-slider">
-                    <input class="mdc-slider__input" type="range" min="0.25" max="200" value="1"
+                    <input class="mdc-slider__input" type="range" min="0.25" max="200" step="0.25" value="1"
                         name="abm-fps-slider-input" aria-label="Simulation speed: frames per second">
                     <div class="mdc-slider__track">
                         <div class="mdc-slider__track--inactive"></div>
@@ -101,6 +101,30 @@
                     <div class="mdc-slider__thumb" role="slider" tabindex="0"
                         aria-label="Simulation speed: frames per second" aria-valuemin="0.25" aria-valuemax="200"
                         aria-valuenow="1">
+                        <div class="mdc-slider__thumb-knob"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="abm-param-label">Infection probability</div>
+            <div class="abm-param-inline">
+                <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                    id="abm-infection-probability-text">
+                    <span class="mdc-text-field__ripple"></span>
+                    <input class="mdc-text-field__input" type="number" placeholder="p"
+                        aria-label="Infection probability" min="0.0" max="1.0" step="0.01" required>
+                    <span class="mdc-line-ripple"></span>
+                </label>
+                <div class="mdc-slider" id="abm-infection-probability-slider">
+                    <input class="mdc-slider__input" type="range" min="0" max="1" step="0.01" value="0.5"
+                        name="abm-infection-probability-slider-input" aria-label="Infection probability">
+                    <div class="mdc-slider__track">
+                        <div class="mdc-slider__track--inactive"></div>
+                        <div class="mdc-slider__track--active">
+                            <div class="mdc-slider__track--active_fill"></div>
+                        </div>
+                    </div>
+                    <div class="mdc-slider__thumb" role="slider" tabindex="0" aria-label="Infection probability"
+                        aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.5">
                         <div class="mdc-slider__thumb-knob"></div>
                     </div>
                 </div>
