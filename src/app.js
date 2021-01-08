@@ -341,7 +341,7 @@ export function js_scenario(rs_step_closure) {
                 start_stop.removeEventListener("click", start_stop_handler, abm_passive_listener);
                 reset_button.removeEventListener("click", reset_button_handler, abm_passive_listener);
                 // Restart simulation here
-                window.abm.rs_deploy_scenario();
+                rs_deploy_scenario();
             });
             abm_allow_buttons = true;
         }
