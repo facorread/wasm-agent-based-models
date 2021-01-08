@@ -21,15 +21,13 @@ use wasm_bindgen::JsCast;
 
 #[wasm_bindgen(module = "/src/app.js")]
 extern "C" {
-    pub type JsAbmParams;
-    #[wasm_bindgen(method)]
-    fn js_n0(this: &JsAbmParams) -> u32;
-    #[wasm_bindgen(method)]
-    fn js_world_length(this: &JsAbmParams) -> i32;
-    #[wasm_bindgen(method)]
-    fn js_sim(this: &JsAbmParams, rs_step_closure: &::js_sys::Function);
-    #[wasm_bindgen(method)]
-    fn js_scenario(this: &JsAbmParams, rs_scenario_closure: &::js_sys::Function);
+    // This project used to have a pub type JsAbmParams. Unfortunately, limitations on wasm-bindgen make this impractical. See
+    // https://github.com/rustwasm/wasm-bindgen/issues/1187
+    // https://docs.rs/wasm-bindgen/0.2.69/wasm_bindgen/closure/struct.Closure.html
+    fn js_n0() -> u32;
+    fn js_world_length() -> i32;
+    fn js_dark_figures() -> bool;
+    fn js_scenario(rs_step_closure: &::js_sys::Function);
     fn js_message(msg: &str);
     fn js_error(msg: &str);
 }
@@ -133,7 +131,7 @@ struct Scenario {
 // end-similar-code 0
 
 #[wasm_bindgen]
-pub fn rs_deploy_scenario(abm_params: &JsAbmParams) {
+pub fn rs_deploy_scenario() {
     // This provides better error messages in debug mode.
     // It's disabled in release mode so it doesn't bloat up the file size.
     #[cfg(debug_assertions)]
@@ -147,13 +145,13 @@ pub fn rs_deploy_scenario(abm_params: &JsAbmParams) {
 
     // js_message(&format!(
     //     "Welcome to wasm-agent-based-models! n0 = {}",
-    //     abm_params.js_n0()
+    //     js_n0()
     // ));
 
-    let world_length = abm_params.js_world_length();
+    let world_length = js_world_length();
     // begin-similar-code 1
     // Model parameter: Initial number of agents
-    let n0: usize = abm_params.js_n0() as usize;
+    let n0: usize = js_n0() as usize;
     // Model parameter: Scale-free network parameter: new links per agent
     #[cfg(feature = "net")]
     let net_k: usize = 7;
@@ -531,7 +529,7 @@ pub fn rs_deploy_scenario(abm_params: &JsAbmParams) {
         let x_label_offset = 1;
         let y_label_area_size = 60;
         // end-similar-code 6
-        let dark_figures = true;
+        let dark_figures = js_dark_figures();
         let canvas_backend =
             plotters_canvas::CanvasBackend::new("abm-canvas").expect("cannot find canvas");
         use plotters::drawing::IntoDrawingArea;
@@ -839,6 +837,6 @@ pub fn rs_deploy_scenario(abm_params: &JsAbmParams) {
 
         time_step += 1;
     }) as Box<dyn FnMut()>);
-    abm_params.js_sim(rs_step_closure.as_ref().unchecked_ref());
+    js_scenario(rs_step_closure.as_ref().unchecked_ref());
     rs_step_closure.forget();
 }

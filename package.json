@@ -50,6 +50,8 @@
     "@material/list": "^9.0.0",
     "@material/ripple": "^9.0.0",
     "@material/slider": "^9.0.0",
-    "@material/textfield": "^9.0.0"
+    "@material/switch": "^9.0.0",
+    "@material/textfield": "^9.0.0",
+    "@material/theme": "^9.0.0"
   }
 }

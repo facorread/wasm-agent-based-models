@@ -1,7 +1,15 @@
+@use "@material/theme" with (
+  $primary: #3700b3,
+  $secondary: #018786,
+  $on-primary: #ffffff,
+  $on-secondary: #ffffff,
+);
+
 @use "@material/card";
 @use "@material/fab";
 @use "@material/icon-button";
 @use "@material/slider/slider";
+@use "@material/switch";
 @use "@material/floating-label/mdc-floating-label";
 @use "@material/line-ripple/mdc-line-ripple";
 @use "@material/notched-outline/mdc-notched-outline";
@@ -11,12 +19,11 @@
 @include fab.core-styles;
 @include icon-button.core-styles;
 @include slider.core-styles;
+@include switch.core-styles;
 @include textfield.core-styles;
 
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 
-$abm-primary-color: #6200ee;
-$abm-secondary-color: #03DAC6;
 $abm-density-scale: 0;
 
 a:link, a:visited, a:hover, a:active {
@@ -67,6 +74,10 @@ body {
     p {
         margin: 0;
     }
+}
+
+.abm-padded {
+    padding: 10px 0 10px 0;
 }
 
 .abm-titles {
