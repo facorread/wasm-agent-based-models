@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Reliable and efficient agent-based models in Rust and WebAssembly (full example website)",
   "scripts": {
-    "build": "rimraf pkg && webpack",
+    "build": "rimraf pkg target/app && webpack --mode=production --output-path ./target/app",
     "start": "rimraf pkg && webpack-dev-server --open",
     "test": "cargo test && wasm-pack test --headless"
   },
@@ -30,6 +30,7 @@
     "@wasm-tool/wasm-pack-plugin": "^1.3.1",
     "autoprefixer": "^10.1.0",
     "babel-loader": "^8.2.2",
+    "copy-webpack-plugin": "^7.0.0",
     "css-loader": "^5.0.1",
     "extract-loader": "^5.1.0",
     "file-loader": "^6.2.0",
