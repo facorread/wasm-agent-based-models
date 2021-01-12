@@ -170,7 +170,7 @@ pub fn rs_deploy_scenario() {
     let survival_distro = Bernoulli::new(0.8).unwrap();
     // end-similar-code 1
     #[cfg(feature = "net-graphics")]
-    let compress_histogram = true;
+    let compress_histogram = false;
     let mut scenario = Scenario::default();
 
     // begin-similar-code 2
