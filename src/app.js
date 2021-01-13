@@ -91,18 +91,27 @@ function set_min_max_step(elem, value, min, max, step) {
     elem.setAttribute("step", step);
 }
 
+function set_aria_min_max(elem, value, min, max) {
+    elem.setAttribute("aria-valuenow", value);
+    elem.setAttribute("aria-valuemin", min);
+    elem.setAttribute("aria-valuemax", max);
+}
+
 // Links a continuous slider with a textfield to show the numerical value continuously.
 // Set the minimum and maximum values in index.html.
 class JsSliderValue {
-    constructor(initial_value, text_min, text_max, slider_min, slider_max, step_size, use_logarithmic_slider, slider_id, text_id) {
+    constructor(initial_value, text_min, text_max, slider_min, slider_max, step_size, use_logarithmic_slider, id_prefix) {
         // number: initial_value, text_min, text_max, slider_min, slider_max, step_size
         // bool: use_logarithmic_slider
-        // string: slider_id, text_id
+        // string: id_prefix
 
         // Set the HTML attributes before initializing the Material Components
-        let text_element = js_get_id(text_id);
-        let slider_element = js_get_id(slider_id);
-        set_min_max_step(text_element, initial_value, text_min, text_max, step_size);
+        let text_element = js_get_id(id_prefix + "-text");
+        let text_input_element = js_get_id(id_prefix + "-text-input");
+        let slider_element = js_get_id(id_prefix + "-slider");
+        let slider_input_element = js_get_id(id_prefix + "-slider-input");
+        let slider_thumb_element = js_get_id(id_prefix + "-slider-thumb");
+        set_min_max_step(text_input_element, initial_value, text_min, text_max, step_size);
         this.numeric_value = initial_value;
         this.slider_min = slider_min;
         this.slider_max = slider_max;
@@ -138,9 +147,12 @@ class JsSliderValue {
             this.log_min = Math.log(slider_min);
             this.log_scale = (Math.log(slider_max) - this.log_min) / (slider_max - slider_min);
             let log_step_size = slider_max - this.private_calculate_slider_position(slider_max - step_size);
-            set_min_max_step(slider_element, this.private_calculate_slider_position(initial_value), slider_min, slider_max, log_step_size);
+            let current_position = this.private_calculate_slider_position(initial_value);
+            set_min_max_step(slider_input_element, current_position, slider_min, slider_max, log_step_size);
+            set_aria_min_max(slider_thumb_element, current_position, slider_min, slider_max);
         } else {
-            set_min_max_step(slider_element, initial_value, slider_min, slider_max, step_size);
+            set_min_max_step(slider_input_element, initial_value, slider_min, slider_max, step_size);
+            set_aria_min_max(slider_thumb_element, initial_value, slider_min, slider_max);
         }
 
         // console.log("initial_value " + initial_value + " text_min " + text_min + " text_max " + text_max + " slider_min " + slider_min + " slider_max " + slider_max + " step_size " + step_size + " use_logarithmic_slider " + use_logarithmic_slider + " text_id " + text_id + " slider_id " + slider_id);
@@ -173,17 +185,15 @@ class JsSliderValue {
         function text_listener(event) {
             if (myself.valid) {
                 myself.numeric_value = parseFloat(myself.text.value);
-                let new_slider_position;
                 if (myself.logarithmic) {
                     if (myself.numeric_value > 0) {
-                        new_slider_position = myself.private_calculate_slider_position(myself.numeric_value);
+                        myself.private_set_slider_value(myself.private_calculate_slider_position(myself.numeric_value));
                     } else {
-                        new_slider_position = myself.slider_min;
+                        this.slider.setValue(this.slider_min);
                     }
                 } else {
-                    new_slider_position = myself.numeric_value;
+                    myself.private_set_slider_value(myself.numeric_value);
                 }
-                myself.private_set_slider_value(new_slider_position);
             }
         }
         function text_change_listener() {
@@ -208,6 +218,7 @@ class JsSliderValue {
         this.numeric_value = Math.exp(this.log_min + this.log_scale * (this.slider.getValue() - this.slider_min));
     }
     private_set_slider_value(new_value) {
+        // Do not add any instructions to this function; slider.setValue() is used elsewhere.
         if (new_value < this.slider_min) {
             this.slider.setValue(this.slider_min);
         } else if (new_value > this.slider_max) {
@@ -364,11 +375,11 @@ function js_init() {
             //     const switchControl = new MDCSwitch(el);
             // }
             window.abm = {};
-            window.abm.nAgents0 = new JsSliderValue(1000, 1, 2000, 1, 2000, 1, true, "abm-n-agents-slider", "abm-n-agents-text");
-            window.abm.worldLength = new JsSliderValue(10, 2, 200, 2, 200, 1, false, "abm-world-length-slider", "abm-world-length-text");
-            window.abm.fps = new JsSliderValue(1, 0.25, 100, 0.25, 100, 0.25, false, "abm-fps-slider", "abm-fps-text");
+            window.abm.nAgents0 = new JsSliderValue(1000, 1, 2000, 1, 2000, 1, true, "abm-n-agents");
+            window.abm.worldLength = new JsSliderValue(10, 2, 200, 2, 200, 1, false, "abm-world-length");
+            window.abm.fps = new JsSliderValue(1, 0.25, 100, 0.25, 100, 0.25, false, "abm-fps");
             window.abm.dark_figures_switch = new MDCSwitch(js_get_id("abm-dark-mode-switch"));
-            window.abm.infection_probability = new JsSliderValue(0.5, 0, 1, 0, 1, 0.01, false, "abm-infection-probability-slider", "abm-infection-probability-text");
+            window.abm.infection_probability = new JsSliderValue(0.5, 0, 1, 0, 1, 0.01, false, "abm-infection-probability");
 
             // Webpack requires WebAssembly to be a dynamic import for now.
             import("/pkg/index.js").then(function (module) {
