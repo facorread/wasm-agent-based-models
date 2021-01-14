@@ -37,9 +37,9 @@ body {
     margin: 0;
 }
 
-#abm-canvas {
-    // transform: matrix(0.5, 0, 0, 0.5, -400, -250); // BUG: If the canvas is transformed, Chrome shows it on top of the panel.
-}
+// #abm-canvas {
+//     transform: matrix(0.5, 0, 0, 0.5, -400, -250); // BUG: If the canvas is transformed, Chrome shows it on top of the panel.
+// }
 
 #abm-canvas-container {
     height: 100%;
