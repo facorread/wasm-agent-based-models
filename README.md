@@ -38,7 +38,7 @@ To examine the similarities between the two programs, you can use `[fgrep]`:
 fgrep -xf rust-agent-based-models/src/main.rs wasm-agent-based-models/src/lib.rs
 ```
 
-The live example at https://facorread.gitlab.io/wasm-agent-based-models shows the epidemic model from the rust-agent-based-models project.
+The live example at http://facorread.netlify.app/wasm-agent-based-models shows the epidemic model from the rust-agent-based-models project.
 
 ## Why make these two separate projects? / Do I need to copy code from one project into the other verbatim?
 
