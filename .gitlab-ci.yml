@@ -1,20 +1,23 @@
 # Documentation: https://gitlab.com/pages/plain-html
+
+# GitLab Pages does not accept WASM files. We are disabling CI for now.
+
 # Moving from docs to public is redundant but necessary https://gitlab.com/gitlab-org/gitlab-ee/issues/1719#note_24326702
 
-image: 'node:latest'
+# image: 'node:latest'
 
-stages:
-  - deploy
+# stages:
+#   - deploy
 
-pages:
-  stage: deploy
-  script:
-    - npm install
-    - npm run build
-    - mkdir public
-    - mv target/app/* public/
-  artifacts:
-    paths:
-      - public
-  only:
-  - master
+# pages:
+#   stage: deploy
+#   script:
+#     - npm install
+#     - npm run build
+#     - mkdir public
+#     - mv target/app/* public/
+#   artifacts:
+#     paths:
+#       - public
+#   only:
+#   - master
