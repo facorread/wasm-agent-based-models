@@ -29,7 +29,7 @@ npm install
 npm start
 ```
 
-This will invoke [`webpack-dev-server`] and should automatically open the model in a web browser.
+This will invoke [`webpack-dev-server`] and automatically open the model in a web browser.
 
 Once you have verified that the code builds, take some time to understand the similarities and differences between this project and [rust-agent-based-models]. Look for the `begin-similar-code` markers for blocks of code that both projects have in common, and then use this project for manually exploring parameters from your ABM.
 
