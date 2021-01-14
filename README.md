@@ -32,7 +32,7 @@ You can also use `[diff]` to examine differences between the two programs, for e
 diff -u rust-agent-based-models/src/main.rs wasm-agent-based-models/src/lib.rs
 ```
 
-To examine the similarities between the two programs, you can use `[fgrep]`:
+To examine the similarities between the two programs, you can use [`fgrep`]:
 
 ```bash
 fgrep -xf rust-agent-based-models/src/main.rs wasm-agent-based-models/src/lib.rs
@@ -71,14 +71,13 @@ Not explicitly.
 
 ## Acknowledgements
 
-This project was created using the [wasm-pack-template] template by the [rust-wasm] team.
-
-The `www/` directory comes from the [create-wasm-app] template by Ashley Williams of the [rust-wasm] team.
+This project uses the [wasm-pack-template] template by the [rust-wasm] team, the [create-wasm-app] template by Ashley Williams of the [rust-wasm] team, and [Material Components for the web].
 
 [create-wasm-app]:https://github.com/rustwasm/create-wasm-app
 [diff]:https://man7.org/linux/man-pages/man1/diff.1.html
 [fgrep]:https://man7.org/linux/man-pages/man1/fgrep.1.html
 [graphical user interfaces]:https://www.areweguiyet.com/
+[Material Components for the web]:https://github.com/material-components/material-components-web
 [`npm`]:https://www.npmjs.com/get-npm
 [`OffscreenCanvas`]:https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
 [rust-agent-based-models]:https://github.com/facorread/rust-agent-based-models
