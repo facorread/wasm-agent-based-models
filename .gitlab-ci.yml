@@ -1,0 +1,20 @@
+# Documentation: https://gitlab.com/pages/plain-html
+# Moving from docs to public is redundant but necessary https://gitlab.com/gitlab-org/gitlab-ee/issues/1719#note_24326702
+
+image: 'node:latest'
+
+stages:
+  - deploy
+
+pages:
+  stage: deploy
+  script:
+    - npm install
+    - npm run build
+    - mkdir public
+    - mv target/app/* public/
+  artifacts:
+    paths:
+      - public
+  only:
+  - master

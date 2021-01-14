@@ -38,6 +38,8 @@ To examine the similarities between the two programs, you can use `[fgrep]`:
 fgrep -xf rust-agent-based-models/src/main.rs wasm-agent-based-models/src/lib.rs
 ```
 
+The live example at https://facorread.gitlab.io/wasm-agent-based-models shows the epidemic model from the rust-agent-based-models project.
+
 ## Why make these two separate projects? / Do I need to copy code from one project into the other verbatim?
 
 Sometimes you want to copy the full model from one project to another, and sometimes you want to explore changes to just one of the concepts or algorithms. These projects are complementary rather than redundant.
@@ -60,6 +62,9 @@ For the sliders that are accompanied by input boxes, such as the Simulation spee
 
 The model is in development mode by default, which enables debugging of the Rust and Javascript code; debugging is time-consuming. In file `webpack.config.js` you can change the mode to production, which speeds up the model considerably.
 
+## Why is the website so unresponsive? It stutters and freezes a lot.
+The website is running on a single computer thread, with simulation and rendering as the costliest operations. The thread is also in charge of rendering the user interface and handling interactions, which are lower priorities. The only way to make the website more responsive is to offload the simulation and rendering to a web worker, which hinges on the standardization of [`OffscreenCanvas`]. I am happy to offload modeling work into a web worker as soon as Safari supports [`OffscreenCanvas`]. In the mean time, you could try offloading modeling work into a web worker. This would entail refactoring the model code, which would be quite time-consuming. Meanwhile, rendering work would stay on the main thread, which means stuttering and freezing would persist.
+
 ## Does this repository use `unsafe` code?
 
 Not explicitly.
@@ -75,6 +80,7 @@ The `www/` directory comes from the [create-wasm-app] template by Ashley William
 [fgrep]:https://man7.org/linux/man-pages/man1/fgrep.1.html
 [graphical user interfaces]:https://www.areweguiyet.com/
 [`npm`]:https://www.npmjs.com/get-npm
+[`OffscreenCanvas`]:https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
 [rust-agent-based-models]:https://github.com/facorread/rust-agent-based-models
 [Rust and WebAssembly book]:https://rustwasm.github.io/docs/book/
 [rust-wasm]:https://rustwasm.github.io/
