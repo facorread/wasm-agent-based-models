@@ -46,24 +46,6 @@ function js_get_class(class_name) {
     return collection;
 }
 
-function js_visually_busy(expensive_closure) {
-    let abm_get_busy = js_get_class("abm-get-busy");
-    let was_already_busy = (abm_get_busy[0].classList.contains("abm-busy"));
-    if (was_already_busy) {
-        expensive_closure();
-    } else {
-        for (let el of abm_get_busy) {
-            el.classList.add("abm-busy");
-        }
-        setTimeout(function () {
-            expensive_closure();
-            for (let el of abm_get_busy) {
-                el.classList.remove("abm-busy");
-            }
-        }, 100);
-    }
-}
-
 function js_message_with_color(msg, show_error) {
     let abm_logs = js_get_id("abm-logs");
     let p = document.createElement("p");
@@ -250,10 +232,9 @@ class JsSliderValue {
     }
 }
 
-function layout() {
+function abm_layout() {
     window.abm.nAgents0.layout();
     window.abm.worldLength.layout();
-    window.abm.dark_figures_switch.layout();
     window.abm.fps.layout();
 }
 
@@ -317,7 +298,7 @@ export function js_scenario(rs_step_closure) {
             abm_allow_step = true;
         }
     }
-    js_visually_busy(step_handler); // Shows the first frame of the sim
+    step_handler(); // Shows the first frame of the sim
     function stop_impl() {
         abm_running = false;
         start_stop_label.innerText = "play_arrow";
@@ -344,16 +325,15 @@ export function js_scenario(rs_step_closure) {
     function reset_button_handler(event) {
         if (abm_allow_buttons) {
             abm_allow_buttons = false;
-            js_visually_busy(function () {
-                if (abm_running) {
-                    clearInterval(interval_id);
-                    stop_impl();
-                }
-                start_stop.removeEventListener("click", start_stop_handler, abm_passive_listener);
-                reset_button.removeEventListener("click", reset_button_handler, abm_passive_listener);
-                // Restart simulation here
-                rs_deploy_scenario();
-            });
+            start_stop.removeEventListener("click", start_stop_handler, abm_passive_listener);
+            reset_button.removeEventListener("click", reset_button_handler, abm_passive_listener);
+            if (abm_running) {
+                start_stop_label.innerText = "play_arrow";
+                clearInterval(interval_id);
+                stop_impl();
+            }
+            // Restart simulation here
+            rs_deploy_scenario();
             abm_allow_buttons = true;
         }
     };
@@ -362,32 +342,31 @@ export function js_scenario(rs_step_closure) {
 
 function js_init() {
     {
-        js_visually_busy(function () {
-            for (let el of document.getElementsByClassName("mdc-fab")) {
-                const fabRipple = new MDCRipple(el);
-            }
-            for (let el of document.getElementsByClassName("mdc-icon-button")) {
-                const iconButtonRipple = new MDCRipple(el);
-                iconButtonRipple.unbounded = true;
-            }
-            // Switches should be handled individually
-            // for (let el of document.getElementsByClassName("mdc-switch")) {
-            //     const switchControl = new MDCSwitch(el);
-            // }
-            window.abm = {};
-            window.abm.nAgents0 = new JsSliderValue(1000, 1, 2000, 1, 2000, 1, true, "abm-n-agents");
-            window.abm.worldLength = new JsSliderValue(10, 2, 200, 2, 200, 1, false, "abm-world-length");
-            window.abm.fps = new JsSliderValue(1, 0.25, 100, 0.25, 100, 0.25, false, "abm-fps");
-            window.abm.dark_figures_switch = new MDCSwitch(js_get_id("abm-dark-mode-switch"));
-            window.abm.infection_probability = new JsSliderValue(0.5, 0, 1, 0, 1, 0.01, false, "abm-infection-probability");
+        window.abm = {};
+        window.abm.nAgents0 = new JsSliderValue(1000, 1, 2000, 1, 2000, 1, true, "abm-n-agents");
+        window.abm.worldLength = new JsSliderValue(10, 2, 200, 2, 200, 1, false, "abm-world-length");
+        window.abm.fps = new JsSliderValue(1, 0.25, 100, 0.25, 100, 0.25, false, "abm-fps");
+        window.abm.dark_figures_switch = new MDCSwitch(js_get_id("abm-dark-mode-switch"));
+        window.abm.infection_probability = new JsSliderValue(0.5, 0, 1, 0, 1, 0.01, false, "abm-infection-probability");
 
-            // Webpack requires WebAssembly to be a dynamic import for now.
-            import("/pkg/index.js").then(function (module) {
-                window.abm.rs_mod = module;
-                rs_deploy_scenario();
-            }, console.error);
+        for (let el of document.getElementsByClassName("mdc-fab")) {
+            const fabRipple = new MDCRipple(el);
+        }
+        for (let el of document.getElementsByClassName("mdc-icon-button")) {
+            const iconButtonRipple = new MDCRipple(el);
+            iconButtonRipple.unbounded = true;
+        }
+        // Switches should be handled individually
+        // for (let el of document.getElementsByClassName("mdc-switch")) {
+        //     const switchControl = new MDCSwitch(el);
+        // }
 
-        });
+        // Webpack requires WebAssembly to be a dynamic import for now.
+        import("/pkg/index.js").then(function (module) {
+            window.abm.rs_mod = module;
+            rs_deploy_scenario();
+        }, console.error);
+
     }
     {
         let left_offset = 0, top_offset = 0, abm_card = js_get_id("abm-card");
