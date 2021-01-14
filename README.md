@@ -22,7 +22,14 @@ Rust offers a range of tools to develop [graphical user interfaces] (GUIs); in 2
 
 To get started with wasm-agent-based models, decent knowledge of html, css, and javascript is required. You should also read the [Rust and WebAssembly book], and follow the setup instructions therein. [`npm`] is required.
 
-After you have started with [rust-agent-based-models], [Clone this repository] (`https://github.com/facorread/wasm-agent-based-models.git`) and use your favorite terminal to run `wasm-pack build --target web`. Follow the instructions on screen.
+After you have started with [rust-agent-based-models], clone this repository. From a terminal, run:
+
+```bash
+npm install
+npm start
+```
+
+This will invoke [`webpack-dev-server`] and should automatically open the model in a web browser.
 
 Once you have verified that the code builds, take some time to understand the similarities and differences between this project and [rust-agent-based-models]. Look for the `begin-similar-code` markers for blocks of code that both projects have in common, and then use this project for manually exploring parameters from your ABM.
 
@@ -37,6 +44,14 @@ To examine the similarities between the two programs, you can use [`fgrep`]:
 ```bash
 fgrep -xf rust-agent-based-models/src/main.rs wasm-agent-based-models/src/lib.rs
 ```
+
+When you are satisfied with your model implementation, use
+
+```bash
+npm run build
+```
+
+to build an optimized version of the model in the folder `target/app`. These are static files ready to be uploaded to a web server of your choice.
 
 The live example at http://facorread.netlify.app/wasm-agent-based-models shows the epidemic model from the rust-agent-based-models project.
 
@@ -63,7 +78,7 @@ For the sliders that are accompanied by input boxes, such as the Simulation spee
 The model is in development mode by default, which enables debugging of the Rust and Javascript code; debugging is time-consuming. In file `webpack.config.js` you can change the mode to production, which speeds up the model considerably.
 
 ## Why is the website so unresponsive? It stutters and freezes a lot.
-The website is running on a single computer thread, with simulation and rendering as the costliest operations. The thread is also in charge of rendering the user interface and handling interactions, which are lower priorities. The only way to make the website more responsive is to offload the simulation and rendering to a web worker, which hinges on the standardization of [`OffscreenCanvas`]. I am happy to offload modeling work into a web worker as soon as Safari supports [`OffscreenCanvas`]. In the mean time, you could try offloading modeling work into a web worker. This would entail refactoring the model code, which would be quite time-consuming. Meanwhile, rendering work would stay on the main thread, which means stuttering and freezing would persist.
+The website is running on a single computer thread, with simulation and rendering as the costliest operations. The thread also renders the user interface and handles interactions, as lower priority tasks. The only way to make the website more responsive is to offload the simulation and rendering to a web worker, which hinges on the standardization of [`OffscreenCanvas`]. I am happy to offload modeling work into a web worker as soon as [`OffscreenCanvas`] becomes available on Safari. In the mean time, you could try offloading modeling work into a web worker yourself. This would entail refactoring the model code, which would be quite time-consuming. Meanwhile, rendering work would stay on the main thread, which means stuttering and freezing would persist.
 
 ## Does this repository use `unsafe` code?
 
@@ -84,3 +99,4 @@ This project uses the [wasm-pack-template] template by the [rust-wasm] team, the
 [Rust and WebAssembly book]:https://rustwasm.github.io/docs/book/
 [rust-wasm]:https://rustwasm.github.io/
 [wasm-pack-template]:https://github.com/rustwasm/wasm-pack-template
+[`webpack-dev-server`]:https://webpack.js.org/configuration/dev-server/
