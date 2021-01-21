@@ -12,7 +12,8 @@
 <body id="abm-body">
     <noscript>This page contains WebAssembly and JavaScript content. Please enable JavaScript in your
         browser.</noscript>
-    <div class="mdc-card abm-draggable" id="abm-card">
+    <!-- Do not apply the abm-draggable class to abm-card; Textfields will be un-clickable otherwise. -->
+    <div class="mdc-card" id="abm-card">
         <p class="abm-titles abm-draggable">Agent-based models in Rust and Wasm
             <a href=" https://github.com/facorread/wasm-agent-based-models#readme"><i
                     class="abm-section-title-icons material-icons">open_in_new</i></a>
@@ -70,6 +71,23 @@
                     </div>
                 </div>
             </div>
+            <!-- <div class="abm-param-label">Example range of values</div>
+            <div class="abm-param-inline">
+                <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                    id="abm-example-range-min-text">
+                    <span class="mdc-text-field__ripple"></span>
+                    <input class="mdc-text-field__input" id="abm-example-range-min-input" type="number"
+                        placeholder="Min" aria-label="Example range min" min="2" max="500" step="1" required>
+                    <span class="mdc-line-ripple"></span>
+                </label>
+                <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                    id="abm-example-range-max-text">
+                    <span class="mdc-text-field__ripple"></span>
+                    <input class="mdc-text-field__input" id="abm-example-range-max-input" type="number"
+                        placeholder="Max" aria-label="Example range max" min="2" max="500" step="1" required>
+                    <span class="mdc-line-ripple"></span>
+                </label>
+            </div> -->
         </details>
         <details open>
             <summary class="abm-titles abm-draggable">Real-time parameters</summary>

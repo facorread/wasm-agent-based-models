@@ -100,6 +100,31 @@ class JsSliderValue {
         this.text_max = text_max;
         this.step_size = step_size;
         this.logarithmic = use_logarithmic_slider;
+        // initial_value, text_min, text_max, slider_min, slider_max, step_size
+        if (!Number.isFinite(initial_value)) {
+            js_error("Error: JsSliderValue initial_value " + initial_value + " is not a valid value.");
+            throw new Error("Error: JsSliderValue initial_value " + initial_value + " is not a valid value.");
+        }
+        if (!Number.isFinite(text_min)) {
+            js_error("Error: JsSliderValue text_min " + text_min + " is not a valid value.");
+            throw new Error("Error: JsSliderValue text_min " + text_min + " is not a valid value.");
+        }
+        if (!Number.isFinite(text_max)) {
+            js_error("Error: JsSliderValue text_max " + text_max + " is not a valid value.");
+            throw new Error("Error: JsSliderValue text_max " + text_max + " is not a valid value.");
+        }
+        if (!Number.isFinite(slider_min)) {
+            js_error("Error: JsSliderValue slider_min " + slider_min + " is not a valid value.");
+            throw new Error("Error: JsSliderValue slider_min " + slider_min + " is not a valid value.");
+        }
+        if (!Number.isFinite(slider_max)) {
+            js_error("Error: JsSliderValue slider_max " + slider_max + " is not a valid value.");
+            throw new Error("Error: JsSliderValue slider_max " + slider_max + " is not a valid value.");
+        }
+        if (!Number.isFinite(step_size)) {
+            js_error("Error: JsSliderValue step_size " + step_size + " is not a valid value.");
+            throw new Error("Error: JsSliderValue step_size " + step_size + " is not a valid value.");
+        }
         if (!(step_size > 0)) {
             js_error("Error: JsSliderValue " + slider_id + " has a step of " + step_size + ". Please make it a valid positive value.");
             throw new Error("Error: JsSliderValue " + slider_id + " has a step of " + step_size + ". Please make it a valid positive value.");
@@ -231,10 +256,112 @@ class JsSliderValue {
     }
 }
 
+// Maintains textfields showing the minimum and maximum value of a parameter.
+class JsMinMax {
+    constructor(initial_min, initial_max, absolute_min, absolute_max, step_size, id_prefix) {
+        if (!Number.isFinite(initial_min)) {
+            js_error("Error: JsMinMax initial_min " + initial_min + " is not a valid value.");
+            throw new Error("Error: JsMinMax initial_min " + initial_min + " is not a valid value.");
+        }
+        if (!Number.isFinite(initial_max)) {
+            js_error("Error: JsMinMax initial_max " + initial_max + " is not a valid value.");
+            throw new Error("Error: JsMinMax initial_max " + initial_max + " is not a valid value.");
+        }
+        if (!Number.isFinite(absolute_min)) {
+            js_error("Error: JsMinMax absolute_min " + absolute_min + " is not a valid value.");
+            throw new Error("Error: JsMinMax absolute_min " + absolute_min + " is not a valid value.");
+        }
+        if (!Number.isFinite(absolute_max)) {
+            js_error("Error: JsMinMax absolute_max " + absolute_max + " is not a valid value.");
+            throw new Error("Error: JsMinMax absolute_max " + absolute_max + " is not a valid value.");
+        }
+        if (!Number.isFinite(step_size)) {
+            js_error("Error: JsMinMax step_size " + step_size + " is not a valid value.");
+            throw new Error("Error: JsMinMax step_size " + step_size + " is not a valid value.");
+        }
+        if (!(step_size > 0)) {
+            js_error("Error: JsMinMax " + id_prefix + " has a step of " + step_size + ". Please make it a valid positive value.");
+            throw new Error("Error: JsMinMax " + slider_id + " has a step of " + step_size + ". Please make it a valid positive value.");
+        }
+        if (absolute_min > initial_min) {
+            js_error("Error: JsMinMax " + id_prefix + " has absolute_min " + absolute_min + ". Please review app.js to change it to a value smaller than initial_min " + initial_min + ".");
+            throw new Error("Error: JsMinMax " + id_prefix + " has absolute_min " + absolute_min + ". Please review app.js to change it to a value smaller than initial_min " + initial_min + ".");
+        }
+        if (initial_min > initial_max) {
+            js_error("Error: JsMinMax " + id_prefix + " has initial_min " + initial_min + ". Please review app.js to change it to a value smaller than initial_max " + initial_max + ".");
+            throw new Error("Error: JsMinMax " + id_prefix + " has initial_min " + initial_min + ". Please review app.js to change it to a value smaller than initial_max " + initial_max + ".");
+        }
+        if (initial_max > absolute_max) {
+            js_error("Error: JsMinMax " + id_prefix + " has initial_max " + initial_max + ". Please review app.js to change it to a value smaller than absolute_max " + absolute_max + ".");
+            throw new Error("Error: JsMinMax " + id_prefix + " has initial_max " + initial_max + ". Please review app.js to change it to a value smaller than absolute_max " + absolute_max + ".");
+        }
+        // Set the HTML attributes before initializing the Material Components
+        let min_element = js_get_id(id_prefix + "-min-text");
+        let max_element = js_get_id(id_prefix + "-max-text");
+        let min_input_element = js_get_id(id_prefix + "-min-input");
+        let max_input_element = js_get_id(id_prefix + "-max-input");
+        this.current_min = initial_min;
+        this.current_max = initial_max;
+        this.absolute_min = absolute_min;
+        this.absolute_max = absolute_max;
+        this.step_size = step_size;
+        this.id_prefix = id_prefix;
+        this.valid = true;
+        set_min_max_step(min_input_element, initial_min, absolute_min, absolute_max, step_size);
+        set_min_max_step(max_input_element, initial_min, absolute_min, absolute_max, step_size);
+        this.mdc_min = new MDCTextField(min_element);
+        this.mdc_max = new MDCTextField(max_element);
+        this.mdc_min.value = initial_min;
+        this.mdc_max.value = initial_max;
+        min_element.addEventListener("change", min_listener, abm_passive_listener);
+        max_element.addEventListener("change", max_listener, abm_passive_listener);
+        let myself = this;
+        function min_listener(event) {
+            if (myself.mdc_min.valid && myself.mdc_max.valid) {
+                myself.current_min = parseFloat(myself.mdc_min.value);
+                if (!Number.isFinite(myself.current_min)) {
+                    js_error("Error: JsMinMax " + myself.id_prefix + " current_min " + myself.current_min + " is not a valid value.");
+                    throw new Error("Error: JsMinMax current_min " + myself.current_min + " is not a valid value.");
+                }
+                if (myself.current_min > myself.current_max) {
+                    myself.valid = false;
+                    myself.mdc_min.valid = false;
+                    js_error("Error: JsMinMax " + myself.id_prefix + " is setting current_min to " + myself.current_min + ". Please change it to a value smaller than current_max " + myself.current_max + ".");
+                    // throw new Error("Error: JsMinMax " + myself.id_prefix + " is setting current_min to " + myself.current_min + ". Please change it to a value smaller than current_max " + myself.current_max + ".");
+                } else {
+                    myself.valid = true;
+                }
+            }
+        }
+        function max_listener(event) {
+            if (myself.mdc_max.valid && myself.mdc_max.valid) {
+                myself.current_max = parseFloat(myself.mdc_max.value);
+                if (!Number.isFinite(myself.current_max)) {
+                    js_error("Error: JsMinMax " + myself.id_prefix + "  current_max " + myself.current_max + " is not a valid value.");
+                    throw new Error("Error: JsMinMax current_max " + myself.current_max + " is not a valid value.");
+                }
+                if (myself.current_min > myself.current_max) {
+                    myself.valid = false;
+                    myself.mdc_max.valid = false;
+                    js_error("Error: JsMinMax " + myself.id_prefix + " is setting current_max to " + myself.current_max + ". Please change it to a value larger than current_min " + myself.current_min + ".");
+                    // throw new Error("Error: JsMinMax " + id_prefix + " is setting current_max to " + myself.current_max + ". Please change it to a value larger than current_min " + myself.current_min + ".");
+                } else {
+                    myself.valid = true;
+                }
+            }
+        }
+    }
+    layout() {
+        this.mdc_min.layout();
+        this.mdc_max.layout();
+    }
+}
+
 function abm_layout() {
     window.abm.nAgents0.layout();
     window.abm.worldLength.layout();
     window.abm.fps.layout();
+    // window.abm.example_range.layout();
 }
 
 export function js_n0() {
@@ -347,6 +474,7 @@ function js_init() {
         window.abm.fps = new JsSliderValue(1, 0.25, 100, 0.25, 100, 0.25, false, "abm-fps");
         window.abm.dark_figures_switch = new MDCSwitch(js_get_id("abm-dark-mode-switch"));
         window.abm.infection_probability = new JsSliderValue(0.5, 0, 1, 0, 1, 0.01, false, "abm-infection-probability");
+        // window.abm.example_range = new JsMinMax(10, 20, 1, 100, 1, "abm-example-range");
 
         for (let el of document.getElementsByClassName("mdc-fab")) {
             const fabRipple = new MDCRipple(el);
