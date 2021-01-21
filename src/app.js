@@ -79,8 +79,7 @@ function set_aria_min_max(elem, value, min, max) {
     elem.setAttribute("aria-valuemax", max);
 }
 
-// Links a continuous slider with a textfield to show the numerical value continuously.
-// Set the minimum and maximum values in index.html.
+// Maintains a parameter value in a slider and a textfield simultaneously.
 class JsSliderValue {
     constructor(initial_value, text_min, text_max, slider_min, slider_max, step_size, use_logarithmic_slider, id_prefix) {
         // number: initial_value, text_min, text_max, slider_min, slider_max, step_size
