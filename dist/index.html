@@ -163,8 +163,11 @@
 
 
         <div class="mdc-card__actions abm-draggable">
-            <button class="mdc-icon-button material-icons" id="abm-reset-button">refresh</button>
-            <button class="mdc-fab" aria-label="start" id="start-stop">
+            <button class="mdc-icon-button material-icons" id="abm-reset-button"
+                title="Restart simulation">refresh</button>
+            <button class="mdc-icon-button material-icons" id="abm-step-button"
+                title="Advance 1 time step">skip_next</button>
+            <button class="mdc-fab" aria-label="start" id="start-stop" title="Start/stop simulation">
                 <div class="mdc-fab__ripple"></div>
                 <span class="mdc-fab__icon material-icons" id="start-stop-label">play_arrow</span>
             </button>

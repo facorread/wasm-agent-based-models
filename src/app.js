@@ -448,6 +448,7 @@ export function js_scenario(rs_step_closure) {
     };
     start_stop.addEventListener("click", start_stop_handler, abm_passive_listener);
     let reset_button = js_get_id("abm-reset-button");
+    let step_button = js_get_id("abm-step-button");
     function reset_button_handler(event) {
         if (abm_allow_buttons) {
             abm_allow_buttons = false;
@@ -464,6 +465,19 @@ export function js_scenario(rs_step_closure) {
         }
     };
     reset_button.addEventListener("click", reset_button_handler, abm_passive_listener);
+    step_button.addEventListener("click", step_button_handler, abm_passive_listener);
+    function step_button_handler(event) {
+        if (abm_allow_buttons) {
+            abm_allow_buttons = false;
+            if (abm_running) {
+                start_stop_label.innerText = "play_arrow";
+                clearInterval(interval_id);
+                stop_impl();
+            }
+            step_handler();
+            abm_allow_buttons = true;
+        }
+    };
 }
 
 function js_init() {
