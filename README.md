@@ -75,10 +75,10 @@ For the sliders that are accompanied by input boxes, such as the Simulation spee
 
 ## Why is the model so slow?
 
-The model is in development mode by default, which enables debugging of the Rust and Javascript code; debugging is time-consuming. In file `webpack.config.js` you can change the mode to production, which speeds up the model considerably.
+`npm start` compiles the Rust code in debug mode and bundles it in development mode, which enables debugging of the Rust and Javascript code; debugging is time-consuming. `npm run build` compiles the Rust code in release mode and bundles it in production mode, which should result in a fast model for publication to the Web.
 
 ## Why is the website so unresponsive? It stutters and freezes a lot.
-The website is running on a single computer thread, with simulation and rendering as the costliest operations. The thread also renders the user interface and handles interactions, as lower priority tasks. The only way to make the website more responsive is to offload the simulation and rendering to a web worker, which hinges on the standardization of [`OffscreenCanvas`]. I am happy to offload modeling work into a web worker as soon as [`OffscreenCanvas`] becomes available on Safari. In the mean time, you could try offloading modeling work into a web worker yourself. This would entail refactoring the model code, which would be quite time-consuming. Meanwhile, rendering work would stay on the main thread, which means stuttering and freezing would persist.
+The website is running on a single computer thread, with simulation and rendering as the costliest operations. The thread also renders the user interface and handles interactions, as lower priority tasks. The only way to make the website more responsive is to offload the simulation and rendering to a web worker, which hinges on the standardization of [`OffscreenCanvas`]. I am happy to offload modeling work into a web worker as soon as the [`OffscreenCanvas`] standard becomes available on all major browsers. In the mean time, you could try offloading modeling work into a web worker yourself. This would entail refactoring the model code, which would be quite time-consuming. Meanwhile, rendering work would stay on the main thread, which means stuttering and freezing would persist.
 
 ## Does this repository use `unsafe` code?
 
