@@ -57,6 +57,7 @@
     "@material/theme": "^14.0.0"
   },
   "resolutions": {
+    "babel-core@npm:6.26.3/json5": "^1.0.2",
     "file-loader@npm:6.2.0/loader-utils": "^2.0.4",
     "find-node-modules@npm:1.0.4/merge": "^2.1.1",
     "multicast-dns@npm:7.2.5/dns-packet": "^5.4.0",
