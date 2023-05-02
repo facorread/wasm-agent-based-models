@@ -64,9 +64,10 @@ optional = true
 version = "0.2.9"
 features = ["js"]
 
-[dependencies.wee_alloc]
-version = "0.4.5"
+[dependencies.dlmalloc]
+features = ["global"]
 optional = true
+version = "0.2.4"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.34"

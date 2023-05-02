@@ -33,11 +33,10 @@ extern "C" {
     fn js_error(msg: &str);
 }
 
-// When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
-// allocator.
-#[cfg(feature = "wee_alloc")]
+// When the `dlmalloc` feature is enabled, use `dlmalloc` as the global allocator.
+#[cfg(feature = "dlmalloc")]
 #[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+static ALLOC: dlmalloc::GlobalDlmalloc = dlmalloc::GlobalDlmalloc;
 
 // Use the tags begin-similar-code and end-similar-code to mark a block of code that is similar between rust-agent-based-models and wasm-agent-based-models.
 // begin-similar-code 0
