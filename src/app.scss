@@ -7,9 +7,9 @@
 
 @use "@material/card";
 @use "@material/fab";
-@use "@material/icon-button";
-@use "@material/slider/slider";
-@use "@material/switch";
+@use "@material/icon-button/styles" as icon-button-styles;
+@use "@material/slider/styles" as slider-styles;
+@use '@material/switch/styles' as switch-styles;
 @use "@material/floating-label/mdc-floating-label";
 @use "@material/line-ripple/mdc-line-ripple";
 @use "@material/notched-outline/mdc-notched-outline";
@@ -17,9 +17,6 @@
 
 @include card.core-styles;
 @include fab.core-styles;
-@include icon-button.core-styles;
-@include slider.core-styles;
-@include switch.core-styles;
 @include textfield.core-styles;
 
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');

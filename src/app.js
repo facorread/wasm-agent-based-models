@@ -483,7 +483,7 @@ export function js_scenario(rs_step_closure) {
 function js_init() {
     {
         window.abm = {};
-        window.abm.nAgents0 = new JsSliderValue(1000, 1, 2000, 1, 2000, 1, true, "abm-n-agents");
+        window.abm.nAgents0 = new JsSliderValue(1, 1, 2000, 1, 2000, 1, true, "abm-n-agents");
         window.abm.worldLength = new JsSliderValue(10, 2, 200, 2, 200, 1, false, "abm-world-length");
         window.abm.fps = new JsSliderValue(1, 0.25, 100, 0.25, 100, 0.25, false, "abm-fps");
         window.abm.dark_figures_switch = new MDCSwitch(js_get_id("abm-dark-mode-switch"));

@@ -16,12 +16,13 @@
 #  limitations under the License.
 [package]
 name = "wasm-agent-based-models"
-version = "0.1.0"
+version = "0.1.2"
 authors = ["Fabio A. Correa Duran <facorread@gmail.com>"]
 description = "Reliable and efficient agent-based models in Rust and WebAssembly"
-edition = "2018"
+edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/facorread/wasm-agent-based-models"
+rust-version = "1.69"
 
 [lib]
 crate-type = ["cdylib"]
@@ -44,23 +45,23 @@ landscape = [] # Enable the landscape
 net = [] # Enable social networks
 
 [dependencies]
-js-sys = "0.3.46"
-plotters = "0.3.0"
+js-sys = "0.3.61"
+plotters = "0.3.4"
 plotters-canvas = "0.3.0"
-rand =  "0.8.1"
-rand_distr = "0.4.0"
-rand_pcg = "0.3.0"
-slotmap = "1.0.1"
-wasm-bindgen = "0.2.69"
-wasm-bindgen-futures = "0.4.19"
-wrapping_coords2d = "0.1.9"
+rand =  "0.8.5"
+rand_distr = "0.4.3"
+rand_pcg = "0.3.1"
+slotmap = "1.0.6"
+wasm-bindgen = "0.2.84"
+wasm-bindgen-futures = "0.4.34"
+wrapping_coords2d = "0.1.10"
 
 [dependencies.console_error_panic_hook]
-version = "0.1.6"
+version = "0.1.7"
 optional = true
 
 [dependencies.getrandom]
-version = "0.2.1"
+version = "0.2.9"
 features = ["js"]
 
 [dependencies.wee_alloc]
@@ -68,7 +69,7 @@ version = "0.4.5"
 optional = true
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.19"
+wasm-bindgen-test = "0.3.34"
 # futures = "0.1.27"
 # wasm-bindgen-futures = "0.3.22"
 

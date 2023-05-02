@@ -5,8 +5,8 @@
   "description": "Reliable and efficient agent-based models in Rust and WebAssembly (full example website)",
   "scripts": {
     "build": "rimraf pkg target/app && webpack --mode=production --output-path ./target/app",
-    "start": "rimraf pkg && webpack-dev-server --open",
-    "test": "cargo test && wasm-pack test --headless"
+    "start": "rimraf pkg && webpack serve --open",
+    "test": "cargo test && wasm-pack test --firefox --headless"
   },
   "repository": {
     "type": "git",
@@ -25,34 +25,37 @@
   },
   "homepage": "https://github.com/facorread/wasm-agent-based-models#readme",
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@wasm-tool/wasm-pack-plugin": "^1.3.1",
-    "autoprefixer": "^10.1.0",
-    "babel-loader": "^8.2.2",
-    "copy-webpack-plugin": "^7.0.0",
-    "css-loader": "^5.0.1",
+    "@babel/core": "^7.21.5",
+    "@babel/preset-env": "^7.21.5",
+    "@wasm-tool/wasm-pack-plugin": "^1.7.0",
+    "autoprefixer": "^10.4.14",
+    "babel-loader": "^9.1.2",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.7.3",
     "extract-loader": "^5.1.0",
     "file-loader": "^6.2.0",
-    "postcss-loader": "^4.1.0",
-    "rimraf": "^3.0.2",
-    "sass": "^1.32.0",
-    "sass-loader": "^10.1.0",
-    "webpack": "^5.11.1",
-    "webpack-cli": "^4.3.1",
-    "webpack-dev-server": "^4.0.0-beta.0",
+    "postcss": "^8.4.23",
+    "postcss-loader": "^7.3.0",
+    "rimraf": "^5.0.0",
+    "sass": "^1.62.1",
+    "sass-loader": "^13.2.2",
+    "webpack": "^5.81.0",
+    "webpack-cli": "^5.0.2",
+    "webpack-dev-server": "^4.13.3",
     "webpack-validator": "^3.0.1"
   },
   "dependencies": {
-    "@material/card": "^9.0.0",
-    "@material/fab": "^9.0.0",
-    "@material/icon-button": "^9.0.0",
-    "@material/line-ripple": "^9.0.0",
-    "@material/list": "^9.0.0",
-    "@material/ripple": "^9.0.0",
-    "@material/slider": "^9.0.0",
-    "@material/switch": "^9.0.0",
-    "@material/textfield": "^9.0.0",
-    "@material/theme": "^9.0.0"
-  }
+    "@material/card": "^14.0.0",
+    "@material/fab": "^14.0.0",
+    "@material/floating-label": "^14.0.0",
+    "@material/icon-button": "^14.0.0",
+    "@material/line-ripple": "^14.0.0",
+    "@material/list": "^14.0.0",
+    "@material/ripple": "^14.0.0",
+    "@material/slider": "^14.0.0",
+    "@material/switch": "^14.0.0",
+    "@material/textfield": "^14.0.0",
+    "@material/theme": "^14.0.0"
+  },
+  "packageManager": "yarn@3.5.1"
 }
